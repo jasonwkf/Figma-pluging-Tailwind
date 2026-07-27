@@ -1,0 +1,16 @@
+---
+description: manifest.json changes for Figma plugins
+globs: manifest.json
+alwaysApply: false
+---
+
+# `manifest.json`
+
+- **`main`**: must point to the compiled main bundle (here `code.js`).
+- **`ui`**: HTML file for the iframe (here `ui.html`).
+- **`editorType`**: include `"figjam"` only if the plugin should run in FigJam.
+- **`networkAccess`**: when adding API calls or assets from the UI, add each hostname to `allowedDomains` (not `none`).
+- **`capabilities`**: add entries only when using a documented capability; do not add unused entries.
+- **`enableProposedApi`**: set `true` only if intentionally using proposed APIs and you accept breakage risk.
+
+After edits, confirm `npm run build` still succeeds and the plugin reloads in Figma with **Plugins → Development → import plugin from manifest** (or your usual dev flow).

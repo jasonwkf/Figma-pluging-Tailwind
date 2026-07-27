@@ -1,0 +1,13 @@
+---
+description: Plugin UI iframe (ui.html, postMessage to main)
+globs: ui.html
+alwaysApply: false
+---
+
+# Plugin UI (`ui.html`)
+
+- No `figma` global — only `parent.postMessage` to reach the main thread.
+- Wrap payloads as `{ pluginMessage: { ... } }` so the main thread receives them on `figma.ui.onmessage`.
+- **Network**: remote requests only work for domains allowed in `manifest.json` → `networkAccess.allowedDomains`.
+- Keep scripts compatible with the iframe environment Figma provides; avoid assuming full browser extension APIs unless documented for plugins.
+- For user actions (buttons, inputs), post messages with a clear `type` field matching what `code.ts` handles.

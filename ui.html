@@ -1,0 +1,308 @@
+<main>
+  <header>
+    <div>
+      <h1>Variables JSON</h1>
+      <p id="status">Loading variables...</p>
+    </div>
+    <button id="close" type="button" title="Close plugin">Close</button>
+  </header>
+
+  <section class="toolbar" aria-label="Export controls">
+    <button id="refresh" type="button">Refresh</button>
+    <button id="copy" type="button">Copy JSON</button>
+    <button id="download" type="button">Download</button>
+    <button id="download-base-css" type="button">Download Tailwind 4 base.css</button>
+  </section>
+
+  <dl class="stats" aria-label="Variable export summary">
+    <div>
+      <dt>Collections</dt>
+      <dd id="collection-count">0</dd>
+    </div>
+    <div>
+      <dt>Variables</dt>
+      <dd id="variable-count">0</dd>
+    </div>
+    <div>
+      <dt>Color Variables</dt>
+      <dd id="color-variable-count">0</dd>
+    </div>
+  </dl>
+
+  <pre id="output">Loading variables...</pre>
+</main>
+
+<style>
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    color: #1f2328;
+    background: #ffffff;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Arial, sans-serif;
+  }
+
+  main {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+    gap: 12px;
+    height: 100%;
+    padding: 16px;
+  }
+
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 650;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #626a73;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  button {
+    min-height: 32px;
+    border: 1px solid #c9ced6;
+    border-radius: 6px;
+    padding: 0 12px;
+    color: #1f2328;
+    background: #ffffff;
+    font: inherit;
+    font-size: 12px;
+    line-height: 16px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #f4f6f8;
+  }
+
+  button:active {
+    background: #e9edf2;
+  }
+
+  button:disabled {
+    color: #8b949e;
+    cursor: default;
+    background: #f6f8fa;
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+  }
+
+  .stats div {
+    border: 1px solid #d8dee4;
+    border-radius: 6px;
+    padding: 10px;
+    background: #f6f8fa;
+  }
+
+  dt {
+    margin: 0;
+    color: #626a73;
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  dd {
+    margin: 2px 0 0;
+    color: #1f2328;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 650;
+  }
+
+  pre {
+    min-height: 0;
+    margin: 0;
+    overflow: auto;
+    border: 1px solid #d8dee4;
+    border-radius: 6px;
+    padding: 12px;
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 16px;
+    white-space: pre;
+  }
+</style>
+
+<script>
+  const statusEl = document.getElementById("status");
+  const outputEl = document.getElementById("output");
+  const collectionCountEl = document.getElementById("collection-count");
+  const variableCountEl = document.getElementById("variable-count");
+  const colorVariableCountEl = document.getElementById("color-variable-count");
+  const refreshButton = document.getElementById("refresh");
+  const copyButton = document.getElementById("copy");
+  const downloadButton = document.getElementById("download");
+  const downloadBaseCssButton = document.getElementById("download-base-css");
+  const closeButton = document.getElementById("close");
+
+  let currentJson = "";
+  let currentBaseCss = "";
+  let currentFileName = "figma-variables";
+
+  function postPluginMessage(message) {
+    parent.postMessage({ pluginMessage: message }, "*");
+  }
+
+  function setBusy(isBusy) {
+    refreshButton.disabled = isBusy;
+    copyButton.disabled = isBusy || !currentJson;
+    downloadButton.disabled = isBusy || !currentJson;
+    downloadBaseCssButton.disabled = isBusy || !currentBaseCss;
+  }
+
+  function setStatus(message) {
+    statusEl.textContent = message;
+  }
+
+  function setCounts(collectionCount, variableCount, colorVariableCount) {
+    collectionCountEl.textContent = String(collectionCount);
+    variableCountEl.textContent = String(variableCount);
+    colorVariableCountEl.textContent = String(colorVariableCount);
+  }
+
+  function normalizeFileName(name) {
+    return String(name || "figma-variables")
+      .trim()
+      .replace(/[^a-z0-9-_]+/gi, "-")
+      .replace(/^-+|-+$/g, "")
+      .toLowerCase();
+  }
+
+  function showLoading() {
+    setBusy(true);
+    setStatus("Loading variables...");
+    outputEl.textContent = "Loading variables...";
+  }
+
+  function showVariablesJson(data) {
+    currentJson = JSON.stringify(data, null, 2);
+    currentBaseCss = data.baseCss || "";
+    currentFileName = normalizeFileName(data.fileName);
+
+    setCounts(data.collectionCount, data.variableCount, data.colorVariableCount || 0);
+    setStatus(
+      `Ready to export ${data.variableCount} variables and ${data.colorVariableCount || 0} colors.`,
+    );
+    outputEl.textContent = currentJson;
+    setBusy(false);
+  }
+
+  function showError(error) {
+    currentJson = "";
+    currentBaseCss = "";
+    setCounts(0, 0, 0);
+    setStatus("Export failed.");
+    outputEl.textContent = `Could not read Figma variables:\n${error}`;
+    setBusy(false);
+  }
+
+  async function copyJson() {
+    if (!currentJson) return;
+
+    try {
+      await navigator.clipboard.writeText(currentJson);
+      setStatus("JSON copied to clipboard.");
+    } catch (_error) {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(outputEl);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      setStatus("JSON selected. Copy it with your keyboard shortcut.");
+    }
+  }
+
+  function downloadJson() {
+    if (!currentJson) return;
+
+    const blob = new Blob([currentJson], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${currentFileName || "figma-variables"}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setStatus("JSON download started.");
+  }
+
+  function downloadBaseCss() {
+    if (!currentBaseCss) return;
+
+    const blob = new Blob([currentBaseCss], { type: "text/css" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "base.css";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setStatus("base.css download started.");
+  }
+
+  refreshButton.addEventListener("click", () => {
+    postPluginMessage({ type: "refresh-variables" });
+  });
+
+  copyButton.addEventListener("click", copyJson);
+  downloadButton.addEventListener("click", downloadJson);
+  downloadBaseCssButton.addEventListener("click", downloadBaseCss);
+
+  closeButton.addEventListener("click", () => {
+    postPluginMessage({ type: "close-plugin" });
+  });
+
+  window.onmessage = (event) => {
+    const pluginMessage = event.data && event.data.pluginMessage;
+    if (!pluginMessage) return;
+
+    if (pluginMessage.type === "variables-loading") {
+      showLoading();
+      return;
+    }
+
+    if (pluginMessage.type === "variables-json") {
+      showVariablesJson(pluginMessage.data);
+      return;
+    }
+
+    if (pluginMessage.type === "variables-error") {
+      showError(pluginMessage.error);
+    }
+  };
+
+  setBusy(true);
+</script>

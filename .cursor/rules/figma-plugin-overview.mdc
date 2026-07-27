@@ -1,0 +1,35 @@
+---
+description: Figma plugin architecture, build, and manifest basics
+alwaysApply: true
+---
+
+# Figma plugin (project)
+
+This repo is a **Figma plugin**: two runtimes, one build output.
+
+## Runtimes
+
+- **Main thread** (`code.ts` → `code.js`): `figma` global, document API, no DOM. Listed as `"main"` in `manifest.json`.
+- **UI iframe** (`ui.html`): browser DOM, `window`, `fetch` (subject to `networkAccess`). No direct `figma` access.
+
+## Messaging
+
+- UI → main: `parent.postMessage({ pluginMessage: payload }, '*')`.
+- Main → UI: `figma.ui.postMessage(payload)`.
+- Main listens: `figma.ui.onmessage = (msg) => { ... }`.
+- Use a **discriminated `type`** (or similar) on messages so handlers stay explicit.
+
+## Build
+
+- TypeScript compiles to `code.js` via `npm run build` / `npm run watch`. Edit `code.ts`, not hand-edit `code.js`.
+- After changing `manifest.json` or `code.ts`, rebuild before testing in Figma.
+
+## Manifest
+
+- **`networkAccess.allowedDomains`**: list every hostname the UI calls, or `"none"` to block network from the UI.
+- **`documentAccess`**: prefer `"dynamic-page"` for current Figma behavior unless you have a reason not to.
+- **`capabilities`**: add only when using a feature that requires it (e.g. specific plugin capabilities in Figma docs).
+
+## Lint
+
+- ESLint uses `@figma/eslint-plugin-figma-plugins`; keep new code consistent with existing patterns and run `npm run lint` when changing TS.

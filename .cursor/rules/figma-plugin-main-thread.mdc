@@ -1,0 +1,14 @@
+---
+description: Main-thread plugin code (figma API, UI lifecycle)
+globs: code.ts
+alwaysApply: false
+---
+
+# Main thread (`code.ts`)
+
+- Import nothing from the UI; communicate only via `figma.ui.onmessage` / `figma.ui.postMessage`.
+- Call `figma.showUI(__html__)` when the plugin needs a UI (template uses `__html__` from the build).
+- **Fonts**: before setting `fontName` on text nodes, `await figma.loadFontAsync(...)`.
+- **Async**: use `async` handlers where you `await` API calls; avoid leaving unhandled rejections.
+- **Close behavior**: call `figma.closePlugin()` when work is done (or when the user cancels), per product UX — do not leave the plugin running without a reason.
+- Prefer **typed message payloads** (e.g. `{ type: 'create-shapes'; count: number }`) and narrow on `msg.type` in `onmessage`.
