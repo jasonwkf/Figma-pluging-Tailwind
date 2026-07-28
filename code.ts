@@ -89,6 +89,8 @@ type VariablesExport = {
   baseCss: string;
   colorTokensCss: string;
   typographyCss: string;
+  indexCss: string;
+  tailwind3Config: string;
   colorVariableCount: number;
   collectionCount: number;
   variableCount: number;
@@ -121,7 +123,7 @@ type LocalTextStyle = Awaited<
   ReturnType<typeof figma.getLocalTextStylesAsync>
 >[number];
 
-figma.showUI(__html__, { width: 560, height: 300 });
+figma.showUI(__html__, { width: 560, height: 350 });
 
 function toJsonSafeValue(value: unknown): unknown {
   return JSON.parse(JSON.stringify(value));
@@ -924,7 +926,10 @@ function toBorderCssCustomPropertyName(name: string): string {
     "borders",
   ]);
 
-  return `--border-${borderPath.join("-")}`;
+  return `--border-${borderPath.join("-")}`.replace(
+    /^--border-border(?=-|$)/,
+    "--border",
+  );
 }
 
 function toSizeCssCustomPropertyName(name: string): string {
@@ -1498,6 +1503,310 @@ function buildColorTokensCss(
   return `/* Generated ${generatedAt} */\n\n@theme {\n${declarations.join("\n")}\n}\n`;
 }
 
+function isPrimitiveColoursSource(
+  collection: LocalVariableCollection,
+  variable: LocalVariable,
+): boolean {
+  const collectionPath = toTokenPath(collection.name);
+  const variablePath = toTokenPath(variable.name);
+  const sourcePath = collectionPath.concat(variablePath);
+  const hasPrimitive = sourcePath.some(
+    (segment) => segment === "primitive" || segment === "primitives",
+  );
+  const hasColours = sourcePath.some(
+    (segment) =>
+      segment === "color" ||
+      segment === "colors" ||
+      segment === "colour" ||
+      segment === "colours",
+  );
+
+  return hasPrimitive && hasColours;
+}
+
+function isIndexTypographyVariable(cssName: string): boolean {
+  return (
+    cssName.indexOf("--letter-spacing") === 0 ||
+    cssName.indexOf("--line-height") === 0 ||
+    cssName.indexOf("--family") === 0 ||
+    cssName.indexOf("--font-") === 0 ||
+    cssName.indexOf("--font-weight") === 0
+  );
+}
+
+function makeIndexCssValue(
+  cssName: string,
+  value: unknown,
+  variable: LocalVariable,
+  variablesById: { [id: string]: LocalVariable },
+): string | null {
+  if (variable.resolvedType === "COLOR") {
+    return makeColorCssValue(value, variablesById);
+  }
+
+  if (cssName.indexOf("--line-height") === 0) {
+    return makeLineHeightCssValue(value);
+  }
+
+  return makeTextCssValue(value);
+}
+
+function buildTailwind3IndexCss(
+  collections: LocalVariableCollection[],
+  variables: LocalVariable[],
+  variablesById: { [id: string]: LocalVariable },
+): string {
+  const generatedAt = new Date().toISOString();
+  const collectionById = collections.reduce<{
+    [id: string]: LocalVariableCollection;
+  }>((byId, collection) => {
+    byId[collection.id] = collection;
+    return byId;
+  }, {});
+  let colorVariables = variables.filter((variable) => {
+    const collection = collectionById[variable.variableCollectionId];
+
+    return (
+      variable.resolvedType === "COLOR" &&
+      collection &&
+      isPrimitiveColoursSource(collection, variable)
+    );
+  });
+
+  if (colorVariables.length === 0) {
+    colorVariables = variables.filter((variable) => {
+      const collection = collectionById[variable.variableCollectionId];
+
+      return (
+        variable.resolvedType === "COLOR" &&
+        collection &&
+        isColorCollection(collection)
+      );
+    });
+  }
+
+  const usedNames: { [cssName: string]: number } = {};
+  const declarations: string[] = [];
+
+  for (const variable of colorVariables.sort((first, second) =>
+    first.name.localeCompare(second.name),
+  )) {
+    const collection = collectionById[variable.variableCollectionId];
+
+    if (!collection) {
+      continue;
+    }
+
+    const cssValue = makeColorCssValue(
+      variable.valuesByMode[collection.defaultModeId],
+      variablesById,
+    );
+
+    if (!cssValue) {
+      continue;
+    }
+
+    const cssName = makeUniqueCssName(
+      toCssCustomPropertyName(variable.name),
+      variable,
+      usedNames,
+    );
+    declarations.push(`    ${cssName}: ${cssValue};`);
+  }
+
+  const primitiveVariables = variables
+    .filter((variable) => {
+      const category = getBaseCssCategory(variable);
+
+      if (category === null || category === "color") {
+        return false;
+      }
+
+      const cssName = toBaseCssCustomPropertyName(variable, category);
+
+      return (
+        category === "spacing" ||
+        category === "border" ||
+        category === "size" ||
+        (category === "typography" && isIndexTypographyVariable(cssName))
+      );
+    })
+    .sort((first, second) => first.name.localeCompare(second.name));
+
+  for (const variable of primitiveVariables) {
+    const collection = collectionById[variable.variableCollectionId];
+    const category = getBaseCssCategory(variable);
+
+    if (!collection || category === null || category === "color") {
+      continue;
+    }
+
+    const cssName = makeUniqueCssName(
+      toBaseCssCustomPropertyName(variable, category),
+      variable,
+      usedNames,
+    );
+    const cssValue = makeIndexCssValue(
+      cssName,
+      variable.valuesByMode[collection.defaultModeId],
+      variable,
+      variablesById,
+    );
+
+    if (!cssValue) {
+      continue;
+    }
+
+    declarations.push(`    ${cssName}: ${cssValue};`);
+  }
+
+  return `/* Generated ${generatedAt} */\n\n@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n@layer base {\n  :root {\n${declarations.join(
+    "\n",
+  )}\n  }\n}\n`;
+}
+
+function toJsObjectLiteral(value: unknown, indentLevel = 0): string {
+  const indent = "  ".repeat(indentLevel);
+  const nextIndent = "  ".repeat(indentLevel + 1);
+
+  if (typeof value === "string") {
+    return JSON.stringify(value);
+  }
+
+  if (typeof value !== "object" || value === null) {
+    return JSON.stringify(value);
+  }
+
+  const objectValue = value as { [key: string]: unknown };
+  const keys = Object.keys(objectValue);
+
+  if (keys.length === 0) {
+    return "{}";
+  }
+
+  return `{\n${keys
+    .map((key) => {
+      const objectKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key)
+        ? key
+        : JSON.stringify(key);
+
+      return `${nextIndent}${objectKey}: ${toJsObjectLiteral(
+        objectValue[key],
+        indentLevel + 1,
+      )},`;
+    })
+    .join("\n")}\n${indent}}`;
+}
+
+function getBackgroundColorKey(name: string): string | null {
+  const path = stripLeadingCategorySegments(toTokenPath(name), [
+    "color",
+    "colors",
+    "colour",
+    "colours",
+  ]);
+  const removeBackgroundPrefix = (segments: string[]): string[] =>
+    segments
+      .map((segment) => segment.replace(/^background-+/, ""))
+      .filter(Boolean);
+  const backgroundIndex = path.indexOf("background");
+
+  if (backgroundIndex !== -1) {
+    const keyPath = removeBackgroundPrefix(path.slice(backgroundIndex + 1));
+
+    return keyPath.length > 0 ? keyPath.join("-") : "DEFAULT";
+  }
+
+  const prefixedBackgroundIndex = path.findIndex(
+    (segment) => segment.indexOf("background-") === 0,
+  );
+
+  if (prefixedBackgroundIndex === -1) {
+    return null;
+  }
+
+  const keyPath = removeBackgroundPrefix(path.slice(prefixedBackgroundIndex));
+
+  return keyPath.length > 0 ? keyPath.join("-") : "DEFAULT";
+}
+
+function getTailwindColorKey(name: string): string {
+  const path = stripLeadingCategorySegments(toTokenPath(name), [
+    "color",
+    "colors",
+    "colour",
+    "colours",
+  ]);
+
+  return path.length > 0 ? path.join("-") : "DEFAULT";
+}
+
+function buildTailwind3Config(
+  collections: LocalVariableCollection[],
+  variables: LocalVariable[],
+  variablesById: { [id: string]: LocalVariable },
+): string {
+  const colorCollection = collections.filter(isColorCollection)[0];
+  const backgroundColor: { [key: string]: string } = {};
+  const colors: { [key: string]: string } = {};
+
+  if (colorCollection) {
+    const lightMode =
+      colorCollection.modes.filter(isLightMode)[0] ||
+      colorCollection.modes.filter(
+        (mode) => mode.modeId === colorCollection.defaultModeId,
+      )[0];
+    const baseColorValueMap = getBaseColorValueMap(
+      collections,
+      variables,
+      variablesById,
+    );
+
+    if (lightMode) {
+      const collectionVariables = variables
+        .filter(
+          (variable) =>
+            variable.variableCollectionId === colorCollection.id &&
+            variable.resolvedType === "COLOR",
+        )
+        .sort((first, second) => first.name.localeCompare(second.name));
+
+      for (const variable of collectionVariables) {
+        const backgroundKey = getBackgroundColorKey(variable.name);
+        const colorKey = getTailwindColorKey(variable.name);
+
+        const modeValue = variable.valuesByMode[lightMode.modeId];
+        let cssValue = makeColorCssValue(modeValue, variablesById);
+
+        if (isColorValue(modeValue)) {
+          const baseVariableName = baseColorValueMap[colorToCss(modeValue)];
+
+          if (baseVariableName) {
+            cssValue = `var(${baseVariableName})`;
+          }
+        }
+
+        if (cssValue) {
+          if (backgroundKey) {
+            backgroundColor[backgroundKey] = cssValue;
+          } else {
+            colors[colorKey] = cssValue;
+          }
+        }
+      }
+    }
+  }
+
+  return `const defaultTheme = require("tailwindcss/defaultTheme");\n\n// Tailwind 3 config generated from Figma variables\nexport default ${toJsObjectLiteral(
+    {
+      theme: {
+        colors,
+        backgroundColor,
+      },
+    },
+  )};\n`;
+}
+
 function makeAliasReference(
   alias: FigmaVariableAlias,
   variablesById: { [id: string]: LocalVariable },
@@ -1679,6 +1988,8 @@ async function getVariablesExport(): Promise<VariablesExport> {
       variablesById,
       variables,
     ),
+    indexCss: buildTailwind3IndexCss(collections, variables, variablesById),
+    tailwind3Config: buildTailwind3Config(collections, variables, variablesById),
     colorVariableCount: variables.filter(
       (variable) => variable.resolvedType === "COLOR",
     ).length,
