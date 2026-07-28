@@ -20,6 +20,31 @@ type StyleDictionaryTokenValue = string | number | boolean;
 
 type BaseCssCategory = "color" | "spacing" | "border" | "size" | "typography";
 
+type TextStyleExport = {
+  schemaVersion: "1.0.0";
+  exportedAt: string;
+  styleCount: number;
+  styles: TextStyleRecord[];
+};
+
+type TextStyleRecord = {
+  id: string;
+  key: string;
+  name: string;
+  description: string;
+  type: "TEXT";
+  fontName: unknown;
+  fontSize: number;
+  fontWeight?: number;
+  lineHeight: unknown;
+  letterSpacing: unknown;
+  paragraphIndent: number;
+  paragraphSpacing: number;
+  textCase: TextCase;
+  textDecoration: TextDecoration;
+  boundVariables?: unknown;
+};
+
 type StyleDictionaryToken = {
   $type: StyleDictionaryTokenType;
   $value: StyleDictionaryTokenValue;
@@ -62,6 +87,8 @@ type VariablesExport = {
   tokenSyntax: "dtcg";
   fileName: string;
   baseCss: string;
+  colorTokensCss: string;
+  typographyCss: string;
   colorVariableCount: number;
   collectionCount: number;
   variableCount: number;
@@ -90,7 +117,685 @@ type LocalVariableCollection = Awaited<
   ReturnType<typeof figma.variables.getLocalVariableCollectionsAsync>
 >[number];
 
-figma.showUI(__html__, { width: 560, height: 640 });
+type LocalTextStyle = Awaited<
+  ReturnType<typeof figma.getLocalTextStylesAsync>
+>[number];
+
+figma.showUI(__html__, { width: 560, height: 300 });
+
+function toJsonSafeValue(value: unknown): unknown {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function readJsonSafeProperty(source: unknown, key: string): unknown {
+  try {
+    const value = (source as { [property: string]: unknown })[key];
+
+    if (typeof value === "function" || typeof value === "undefined") {
+      return undefined;
+    }
+
+    return toJsonSafeValue(value);
+  } catch (_error) {
+    return undefined;
+  }
+}
+
+function serializeTextStyle(style: LocalTextStyle): TextStyleRecord {
+  const record: TextStyleRecord = {
+    id: style.id,
+    key: style.key,
+    name: style.name,
+    description: style.description,
+    type: style.type,
+    fontName: toJsonSafeValue(style.fontName),
+    fontSize: style.fontSize,
+    lineHeight: toJsonSafeValue(style.lineHeight),
+    letterSpacing: toJsonSafeValue(style.letterSpacing),
+    paragraphIndent: style.paragraphIndent,
+    paragraphSpacing: style.paragraphSpacing,
+    textCase: style.textCase,
+    textDecoration: style.textDecoration,
+  };
+
+  if (style.boundVariables) {
+    record.boundVariables = toJsonSafeValue(style.boundVariables);
+  }
+
+  const fontName = style.fontName;
+
+  const runtimeFontWeight = readJsonSafeProperty(style, "fontWeight");
+
+  record.fontWeight =
+    getFontWeightFromValue(runtimeFontWeight) ||
+    getFontWeightFromFontName(fontName) ||
+    undefined;
+
+  return record;
+}
+
+async function getTextStylesExport(): Promise<TextStyleExport> {
+  const styles = await figma.getLocalTextStylesAsync();
+  const records = styles
+    .filter((style) => {
+      const path = toTokenPath(style.name);
+
+      return path[0] === "zb" || path[0].indexOf("zb-") === 0;
+    })
+    .map((style) => serializeTextStyle(style))
+    .sort((first, second) => first.name.localeCompare(second.name));
+
+  return {
+    schemaVersion: "1.0.0",
+    exportedAt: new Date().toISOString(),
+    styleCount: records.length,
+    styles: records,
+  };
+}
+
+function formatFontFamily(fontName: unknown): string | null {
+  if (
+    typeof fontName === "object" &&
+    fontName !== null &&
+    "family" in fontName
+  ) {
+    const family = String(fontName.family);
+
+    return family.indexOf(" ") === -1 ? family : `"${family.replace(/"/g, '\\"')}"`;
+  }
+
+  return null;
+}
+
+function getFontWeightFromFontName(fontName: unknown): number | null {
+  if (
+    typeof fontName !== "object" ||
+    fontName === null ||
+    !("style" in fontName)
+  ) {
+    return null;
+  }
+
+  const fontStyle = String(fontName.style).toLowerCase();
+  const weightMatch = fontStyle.match(/\b([1-9]00)\b/);
+
+  if (weightMatch) {
+    return Number(weightMatch[1]);
+  }
+
+  if (fontStyle.indexOf("thin") !== -1) {
+    return 100;
+  }
+
+  if (fontStyle.indexOf("extra light") !== -1 || fontStyle.indexOf("extralight") !== -1) {
+    return 200;
+  }
+
+  if (fontStyle.indexOf("light") !== -1) {
+    return 300;
+  }
+
+  if (fontStyle.indexOf("regular") !== -1 || fontStyle.indexOf("normal") !== -1) {
+    return 400;
+  }
+
+  if (fontStyle.indexOf("medium") !== -1) {
+    return 500;
+  }
+
+  if (fontStyle.indexOf("semi bold") !== -1 || fontStyle.indexOf("semibold") !== -1) {
+    return 600;
+  }
+
+  if (fontStyle.indexOf("extra bold") !== -1 || fontStyle.indexOf("extrabold") !== -1) {
+    return 800;
+  }
+
+  if (fontStyle.indexOf("bold") !== -1) {
+    return 700;
+  }
+
+  if (fontStyle.indexOf("black") !== -1) {
+    return 900;
+  }
+
+  return null;
+}
+
+function getFontWeightFromValue(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return Math.round(value);
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const numericValue = Number(value);
+
+  if (Number.isFinite(numericValue)) {
+    return Math.round(numericValue);
+  }
+
+  const normalizedValue = value.toLowerCase();
+
+  if (normalizedValue.indexOf("thin") !== -1) {
+    return 100;
+  }
+
+  if (
+    normalizedValue.indexOf("extra light") !== -1 ||
+    normalizedValue.indexOf("extralight") !== -1
+  ) {
+    return 200;
+  }
+
+  if (normalizedValue.indexOf("light") !== -1) {
+    return 300;
+  }
+
+  if (
+    normalizedValue.indexOf("regular") !== -1 ||
+    normalizedValue.indexOf("normal") !== -1
+  ) {
+    return 400;
+  }
+
+  if (normalizedValue.indexOf("medium") !== -1) {
+    return 500;
+  }
+
+  if (
+    normalizedValue.indexOf("semi bold") !== -1 ||
+    normalizedValue.indexOf("semibold") !== -1
+  ) {
+    return 600;
+  }
+
+  if (
+    normalizedValue.indexOf("extra bold") !== -1 ||
+    normalizedValue.indexOf("extrabold") !== -1
+  ) {
+    return 800;
+  }
+
+  if (normalizedValue.indexOf("bold") !== -1) {
+    return 700;
+  }
+
+  if (normalizedValue.indexOf("black") !== -1) {
+    return 900;
+  }
+
+  return null;
+}
+
+function formatLineHeight(lineHeight: unknown): string | null {
+  if (
+    typeof lineHeight === "object" &&
+    lineHeight !== null &&
+    "unit" in lineHeight &&
+    "value" in lineHeight
+  ) {
+    const value = Number(lineHeight.value);
+
+    if (!Number.isFinite(value)) {
+      return null;
+    }
+
+    if (lineHeight.unit === "PERCENT") {
+      return `${Math.round(value)}%`;
+    }
+
+    if (lineHeight.unit === "PIXELS") {
+      return `${Math.round(value)}%`;
+    }
+  }
+
+  return null;
+}
+
+function getRoundedLineHeightPercent(lineHeight: unknown): number | null {
+  if (
+    typeof lineHeight === "object" &&
+    lineHeight !== null &&
+    "unit" in lineHeight &&
+    "value" in lineHeight
+  ) {
+    const value = Number(lineHeight.value);
+
+    if (Number.isFinite(value)) {
+      return Math.round(value);
+    }
+  }
+
+  return null;
+}
+
+function formatLetterSpacing(letterSpacing: unknown): string | null {
+  if (
+    typeof letterSpacing === "object" &&
+    letterSpacing !== null &&
+    "unit" in letterSpacing &&
+    "value" in letterSpacing
+  ) {
+    const value = Number(letterSpacing.value);
+
+    if (!Number.isFinite(value)) {
+      return null;
+    }
+
+    if (value === 0) {
+      return "0";
+    }
+
+    if (letterSpacing.unit === "PERCENT") {
+      return `${value}%`;
+    }
+
+    if (letterSpacing.unit === "PIXELS") {
+      return `${value}px`;
+    }
+  }
+
+  return null;
+}
+
+function textCaseToCss(textCase: TextCase): string | null {
+  if (textCase === "UPPER") {
+    return "uppercase";
+  }
+
+  if (textCase === "LOWER") {
+    return "lowercase";
+  }
+
+  if (textCase === "TITLE") {
+    return "capitalize";
+  }
+
+  return null;
+}
+
+function textDecorationToCss(textDecoration: TextDecoration): string | null {
+  if (textDecoration === "UNDERLINE") {
+    return "underline";
+  }
+
+  if (textDecoration === "STRIKETHROUGH") {
+    return "line-through";
+  }
+
+  return null;
+}
+
+function textStyleToUtilityName(styleName: string): string {
+  const path = toTokenPath(styleName);
+  const normalizedPath = path.map((segment) => {
+    if (segment === "heading") {
+      return "header";
+    }
+
+    if (/^h[1-6]$/.test(segment)) {
+      return segment.replace("h", "");
+    }
+
+    return segment;
+  });
+
+  while (normalizedPath[0] === "zb" || normalizedPath[0].indexOf("zb-") === 0) {
+    if (normalizedPath[0] === "zb") {
+      normalizedPath.shift();
+    } else {
+      normalizedPath[0] = normalizedPath[0].replace(/^zb-+/, "");
+    }
+  }
+
+  return `text-${normalizedPath.join("")}`
+    .replace(/^text-ds(?=.)/, "text-")
+    .replace(/-([0-9]+)$/g, "$1");
+}
+
+function getBoundVariableCssName(
+  style: TextStyleRecord,
+  field: string,
+  variablesById: { [id: string]: LocalVariable },
+): string | null {
+  if (
+    typeof style.boundVariables !== "object" ||
+    style.boundVariables === null ||
+    !(field in style.boundVariables)
+  ) {
+    return null;
+  }
+
+  const binding = (style.boundVariables as { [key: string]: unknown })[field];
+
+  if (
+    typeof binding !== "object" ||
+    binding === null ||
+    !("id" in binding) ||
+    typeof binding.id !== "string"
+  ) {
+    return null;
+  }
+
+  const variable = variablesById[binding.id];
+  const category = variable ? getBaseCssCategory(variable) : null;
+
+  if (!variable || category === null) {
+    return null;
+  }
+
+  return `var(${toBaseCssCustomPropertyName(variable, category)})`;
+}
+
+function getBoundVariable(
+  style: TextStyleRecord,
+  field: string,
+  variablesById: { [id: string]: LocalVariable },
+): LocalVariable | null {
+  if (
+    typeof style.boundVariables !== "object" ||
+    style.boundVariables === null ||
+    !(field in style.boundVariables)
+  ) {
+    return null;
+  }
+
+  const binding = (style.boundVariables as { [key: string]: unknown })[field];
+
+  if (
+    typeof binding !== "object" ||
+    binding === null ||
+    !("id" in binding) ||
+    typeof binding.id !== "string"
+  ) {
+    return null;
+  }
+
+  return variablesById[binding.id] || null;
+}
+
+function getFontWeightSuffixFromCssName(cssName: string): string | null {
+  if (cssName.indexOf("--font-weight-") === 0) {
+    return cssName.replace("--font-weight-", "");
+  }
+
+  return null;
+}
+
+function isFontWeightCssName(cssName: string): boolean {
+  return cssName === "--font-weight" || cssName.indexOf("--font-weight-") === 0;
+}
+
+function getPrimitiveFontWeightVariableMap(
+  variables: LocalVariable[],
+): { [weight: string]: { suffix: string; cssName: string } } {
+  const weightVariables: { [weight: string]: { suffix: string; cssName: string } } =
+    {};
+
+  for (const variable of variables) {
+    if (variable.resolvedType !== "FLOAT" && variable.resolvedType !== "STRING") {
+      continue;
+    }
+
+    const cssName = toTypographyCssCustomPropertyName(variable.name);
+    const suffix = getFontWeightSuffixFromCssName(cssName);
+
+    if (!isFontWeightCssName(cssName)) {
+      continue;
+    }
+
+    const values = Object.keys(variable.valuesByMode).map(
+      (modeId) => variable.valuesByMode[modeId],
+    );
+
+    for (const value of values) {
+      const parsedWeight = getFontWeightFromValue(value);
+
+      if (parsedWeight === null) {
+        continue;
+      }
+
+      const weight = String(parsedWeight);
+
+      if (!weightVariables[weight]) {
+        weightVariables[weight] = {
+          suffix: suffix || "",
+          cssName: toBaseCssCustomPropertyName(variable, "typography"),
+        };
+      }
+    }
+  }
+
+  return weightVariables;
+}
+
+function getTextStyleWeightSuffix(
+  style: TextStyleRecord,
+  variablesById: { [id: string]: LocalVariable },
+  primitiveFontWeightVariables: {
+    [weight: string]: { suffix: string; cssName: string };
+  },
+): string | null {
+  const boundWeightVariable = getBoundVariable(style, "fontWeight", variablesById);
+
+  if (boundWeightVariable) {
+    return (
+      getFontWeightSuffixFromCssName(
+        toTypographyCssCustomPropertyName(boundWeightVariable.name),
+      ) || null
+    );
+  }
+
+  if (!style.fontWeight) {
+    return null;
+  }
+
+  const primitiveWeight = primitiveFontWeightVariables[String(style.fontWeight)];
+
+  return primitiveWeight ? primitiveWeight.suffix : null;
+}
+
+function getTextStyleFontWeightValue(
+  style: TextStyleRecord,
+  variablesById: { [id: string]: LocalVariable },
+  primitiveFontWeightVariables: {
+    [weight: string]: { suffix: string; cssName: string };
+  },
+): string | null {
+  const boundVariableValue = getBoundVariableCssName(
+    style,
+    "fontWeight",
+    variablesById,
+  );
+
+  if (boundVariableValue) {
+    return boundVariableValue;
+  }
+
+  if (!style.fontWeight) {
+    return null;
+  }
+
+  const primitiveWeight = primitiveFontWeightVariables[String(style.fontWeight)];
+
+  return primitiveWeight ? `var(${primitiveWeight.cssName})` : String(style.fontWeight);
+}
+
+function getPrimitiveSizeVariableMap(
+  variables: LocalVariable[],
+): { [size: string]: string } {
+  const sizeVariables: { [size: string]: string } = {};
+
+  for (const variable of variables) {
+    if (variable.resolvedType !== "FLOAT") {
+      continue;
+    }
+
+    if (getBaseCssCategory(variable) !== "size") {
+      continue;
+    }
+
+    const cssName = toBaseCssCustomPropertyName(variable, "size");
+
+    if (cssName.indexOf("--size-") !== 0 && cssName !== "--size") {
+      continue;
+    }
+
+    const values = Object.keys(variable.valuesByMode).map(
+      (modeId) => variable.valuesByMode[modeId],
+    );
+
+    for (const value of values) {
+      if (typeof value !== "number" || !Number.isFinite(value)) {
+        continue;
+      }
+
+      const size = String(value);
+
+      if (!sizeVariables[size]) {
+        sizeVariables[size] = `var(${cssName})`;
+      }
+    }
+  }
+
+  return sizeVariables;
+}
+
+function getPrimitiveLineHeightVariableMap(
+  variables: LocalVariable[],
+  variablesById: { [id: string]: LocalVariable },
+): { [percent: string]: string } {
+  const lineHeightVariables: { [percent: string]: string } = {};
+
+  for (const variable of variables) {
+    if (variable.resolvedType !== "FLOAT") {
+      continue;
+    }
+
+    const cssName = toTypographyCssCustomPropertyName(variable.name);
+
+    if (cssName.indexOf("--line-height") !== 0) {
+      continue;
+    }
+
+    const values = Object.keys(variable.valuesByMode).map(
+      (modeId) => variable.valuesByMode[modeId],
+    );
+
+    for (const value of values) {
+      if (typeof value !== "number" || !Number.isFinite(value)) {
+        continue;
+      }
+
+      const roundedValue = String(Math.round(value));
+
+      if (!lineHeightVariables[roundedValue]) {
+        lineHeightVariables[roundedValue] = `var(${toBaseCssCustomPropertyName(
+          variable,
+          "typography",
+        )})`;
+      }
+    }
+  }
+
+  return lineHeightVariables;
+}
+
+function buildTypographyCssFromTextStyles(
+  textStyles: TextStyleExport,
+  variablesById: { [id: string]: LocalVariable },
+  variables: LocalVariable[],
+): string {
+  const utilities: string[] = [];
+  const primitiveLineHeightVariables = getPrimitiveLineHeightVariableMap(
+    variables,
+    variablesById,
+  );
+  const primitiveFontWeightVariables = getPrimitiveFontWeightVariableMap(variables);
+  const primitiveSizeVariables = getPrimitiveSizeVariableMap(variables);
+
+  for (const style of textStyles.styles) {
+    const declarations: string[] = [];
+    const fontSize =
+      getBoundVariableCssName(style, "fontSize", variablesById) ||
+      primitiveSizeVariables[String(style.fontSize)] ||
+      `${style.fontSize}px`;
+    const roundedLineHeight = getRoundedLineHeightPercent(style.lineHeight);
+    const lineHeight =
+      getBoundVariableCssName(style, "lineHeight", variablesById) ||
+      (roundedLineHeight !== null
+        ? primitiveLineHeightVariables[String(roundedLineHeight)]
+        : null) ||
+      formatLineHeight(style.lineHeight);
+    const letterSpacing =
+      getBoundVariableCssName(style, "letterSpacing", variablesById) ||
+      formatLetterSpacing(style.letterSpacing);
+    const textCase = textCaseToCss(style.textCase);
+    const textDecoration = textDecorationToCss(style.textDecoration);
+    const weightSuffix = getTextStyleWeightSuffix(
+      style,
+      variablesById,
+      primitiveFontWeightVariables,
+    );
+    const classNameWeightSuffix =
+      weightSuffix === "regular" ||
+      weightSuffix === "medium" ||
+      weightSuffix === "light"
+        ? null
+        : weightSuffix;
+    const fontWeight = getTextStyleFontWeightValue(
+      style,
+      variablesById,
+      primitiveFontWeightVariables,
+    );
+    const utilityName = `${textStyleToUtilityName(style.name)}${
+      classNameWeightSuffix ? `-${classNameWeightSuffix}` : ""
+    }`;
+
+    declarations.push(`    font-size: ${fontSize};`);
+
+    if (lineHeight) {
+      declarations.push(`    line-height: ${lineHeight};`);
+    }
+
+    if (fontWeight) {
+      declarations.push(`    font-weight: ${fontWeight};`);
+    }
+
+    if (letterSpacing) {
+      declarations.push(`    letter-spacing: ${letterSpacing};`);
+    }
+
+    if (textCase) {
+      declarations.push(`    text-transform: ${textCase};`);
+    }
+
+    if (textDecoration) {
+      declarations.push(`    text-decoration: ${textDecoration};`);
+    }
+
+    if (style.paragraphIndent !== 0) {
+      declarations.push(`    text-indent: ${style.paragraphIndent}px;`);
+    }
+
+    if (style.paragraphSpacing !== 0) {
+      declarations.push(`    margin-bottom: ${style.paragraphSpacing}px;`);
+    }
+
+    utilities.push(
+      `@utility ${utilityName} {\n${declarations.join("\n")}\n}`,
+    );
+  }
+
+  if (utilities.length === 0) {
+    return `/* Generated ${textStyles.exportedAt} */\n`;
+  }
+
+  return `/* Generated ${textStyles.exportedAt} */\n\n${utilities.join("\n\n")}\n`;
+}
 
 function toTokenPath(name: string): string[] {
   const segments = name
@@ -237,13 +942,29 @@ function toSizeCssCustomPropertyName(name: string): string {
 }
 
 function toTypographyCssCustomPropertyName(name: string): string {
-  const path = stripLeadingCategorySegments(toTokenPath(name), [
+  let path = stripLeadingCategorySegments(toTokenPath(name), [
+    "primitive",
+    "primitives",
     "typography",
     "type",
   ]);
+  const typographyIndex = path.indexOf("typography");
+  const typeIndex = path.indexOf("type");
+  const categoryIndex =
+    typographyIndex !== -1
+      ? typographyIndex
+      : typeIndex !== -1
+        ? typeIndex
+        : -1;
+
+  if (categoryIndex !== -1) {
+    path = path.slice(categoryIndex + 1);
+  }
+
   const lastSegment = path[path.length - 1];
   const parentPath = path.slice(0, -1);
   const letterSpacingIndex = path.indexOf("letter-spacing");
+  const lineHeightIndex = path.indexOf("line-height");
 
   if (letterSpacingIndex !== -1) {
     const letterSpacingPath = path.slice(letterSpacingIndex + 1);
@@ -262,6 +983,18 @@ function toTypographyCssCustomPropertyName(name: string): string {
       /^--letter-spacing-letter-spacing(?=-|$)/,
       "--letter-spacing",
     );
+  }
+
+  if (lineHeightIndex !== -1) {
+    const lineHeightPath = path.slice(lineHeightIndex + 1);
+
+    while (lineHeightPath[0] === "line-height") {
+      lineHeightPath.shift();
+    }
+
+    const lineHeightName = lineHeightPath.join("-");
+
+    return lineHeightName ? `--line-height-${lineHeightName}` : "--line-height";
   }
 
   if (path[0] === "family") {
@@ -294,7 +1027,10 @@ function toTypographyCssCustomPropertyName(name: string): string {
   }
 
   if (lastSegment === "line-height" || lastSegment === "leading") {
-    return `--leading-${(parentPath.length > 0 ? parentPath : ["normal"]).join("-")}`;
+    return `--line-height-${(parentPath.length > 0 ? parentPath : ["normal"]).join("-")}`.replace(
+      /^--line-height-line-height(?=-|$)/,
+      "--line-height",
+    );
   }
 
   if (lastSegment === "font-weight" || lastSegment === "weight") {
@@ -421,6 +1157,18 @@ function makeTextCssValue(value: unknown): string | null {
   return null;
 }
 
+function makeLineHeightCssValue(value: unknown): string | null {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return null;
+  }
+
+  if (value === 0) {
+    return "0";
+  }
+
+  return `${Math.round(value)}%`;
+}
+
 function getSpacingNumberValue(value: unknown): number | null {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return null;
@@ -449,7 +1197,10 @@ function toBaseCssCustomPropertyName(
     return toSizeCssCustomPropertyName(variable.name);
   }
 
-  return toTypographyCssCustomPropertyName(variable.name);
+  return toTypographyCssCustomPropertyName(variable.name).replace(
+    /^--line-height-line-height(?=-|$)/,
+    "--line-height",
+  );
 }
 
 function makeColorCssValue(
@@ -489,6 +1240,52 @@ function makeUniqueCssName(
   return `${cssName}-${normalizedSuffix || seenCount + 1}`;
 }
 
+function isColorCollection(collection: LocalVariableCollection): boolean {
+  const collectionName = toTokenPath(collection.name).join("-");
+
+  return (
+    collectionName === "color" ||
+    collectionName === "colors" ||
+    collectionName === "colour" ||
+    collectionName === "colours"
+  );
+}
+
+function isLightMode(mode: LocalVariableCollection["modes"][number]): boolean {
+  return toTokenPath(mode.name).join("-") === "light";
+}
+
+function getBaseColorValueMap(
+  collections: LocalVariableCollection[],
+  variables: LocalVariable[],
+  variablesById: { [id: string]: LocalVariable },
+): { [cssValue: string]: string } {
+  const valueMap: { [cssValue: string]: string } = {};
+
+  for (const collection of collections) {
+    const collectionVariables = variables
+      .filter(
+        (variable) =>
+          variable.variableCollectionId === collection.id &&
+          variable.resolvedType === "COLOR",
+      )
+      .sort((first, second) => first.name.localeCompare(second.name));
+
+    for (const variable of collectionVariables) {
+      const cssValue = makeColorCssValue(
+        variable.valuesByMode[collection.defaultModeId],
+        variablesById,
+      );
+
+      if (cssValue && cssValue.indexOf("var(") !== 0 && !valueMap[cssValue]) {
+        valueMap[cssValue] = toCssCustomPropertyName(variable.name);
+      }
+    }
+  }
+
+  return valueMap;
+}
+
 function buildBaseCss(
   collections: LocalVariableCollection[],
   variables: LocalVariable[],
@@ -523,6 +1320,7 @@ function buildBaseCss(
       .filter(
         (variable) =>
           variable.variableCollectionId === collection.id &&
+          !isColorCollection(collection) &&
           getBaseCssCategory(variable) !== null,
       )
       .sort((first, second) => first.name.localeCompare(second.name));
@@ -535,20 +1333,21 @@ function buildBaseCss(
       }
 
       const modeValue = variable.valuesByMode[collection.defaultModeId];
-      const cssValue =
-        category === "color"
-          ? makeColorCssValue(modeValue, variablesById)
-          : makeTextCssValue(modeValue);
-
-      if (!cssValue) {
-        continue;
-      }
-
       const cssName = makeUniqueCssName(
         toBaseCssCustomPropertyName(variable, category),
         variable,
         usedNames,
       );
+      const cssValue =
+        category === "color"
+          ? makeColorCssValue(modeValue, variablesById)
+          : cssName.indexOf("--line-height") === 0
+            ? makeLineHeightCssValue(modeValue)
+            : makeTextCssValue(modeValue);
+
+      if (!cssValue) {
+        continue;
+      }
 
       if (category === "color") {
         colorDeclarations.push(`  ${cssName}: ${cssValue};`);
@@ -628,6 +1427,69 @@ function buildBaseCss(
     sizeDeclarations.map((size) => size.declaration),
     typographyDeclarations.map((typography) => typography.declaration),
   );
+
+  if (declarations.length === 0) {
+    return `/* Generated ${generatedAt} */\n\n@theme {\n}\n`;
+  }
+
+  return `/* Generated ${generatedAt} */\n\n@theme {\n${declarations.join("\n")}\n}\n`;
+}
+
+function buildColorTokensCss(
+  collections: LocalVariableCollection[],
+  variables: LocalVariable[],
+  variablesById: { [id: string]: LocalVariable },
+): string {
+  const generatedAt = new Date().toISOString();
+  const colorCollection = collections.filter(isColorCollection)[0];
+
+  if (!colorCollection) {
+    return `/* Generated ${generatedAt} */\n\n@theme {\n}\n`;
+  }
+
+  const lightMode =
+    colorCollection.modes.filter(isLightMode)[0] ||
+    colorCollection.modes.filter(
+      (mode) => mode.modeId === colorCollection.defaultModeId,
+    )[0];
+  const baseColorValueMap = getBaseColorValueMap(collections, variables, variablesById);
+  const usedNames: { [cssName: string]: number } = {};
+  const declarations: string[] = [];
+  const collectionVariables = variables
+    .filter(
+      (variable) =>
+        variable.variableCollectionId === colorCollection.id &&
+        variable.resolvedType === "COLOR",
+    )
+    .sort((first, second) => first.name.localeCompare(second.name));
+
+  if (!lightMode) {
+    return `/* Generated ${generatedAt} */\n\n@theme {\n}\n`;
+  }
+
+  for (const variable of collectionVariables) {
+    const modeValue = variable.valuesByMode[lightMode.modeId];
+    let cssValue = makeColorCssValue(modeValue, variablesById);
+
+    if (isColorValue(modeValue)) {
+      const baseVariableName = baseColorValueMap[colorToCss(modeValue)];
+
+      if (baseVariableName) {
+        cssValue = `var(${baseVariableName})`;
+      }
+    }
+
+    if (!cssValue) {
+      continue;
+    }
+
+    const cssName = makeUniqueCssName(
+      toCssCustomPropertyName(variable.name),
+      variable,
+      usedNames,
+    );
+    declarations.push(`  ${cssName}: ${cssValue};`);
+  }
 
   if (declarations.length === 0) {
     return `/* Generated ${generatedAt} */\n\n@theme {\n}\n`;
@@ -804,12 +1666,19 @@ async function getVariablesExport(): Promise<VariablesExport> {
   const collectionsJson = collections
     .map((collection) => buildCollectionExport(collection, variables, variablesById))
     .filter((collection) => collection.variableCount > 0);
+  const textStyles = await getTextStylesExport();
 
   return {
     format: "style-dictionary",
     tokenSyntax: "dtcg",
     fileName: figma.root.name,
     baseCss: buildBaseCss(collections, variables, variablesById),
+    colorTokensCss: buildColorTokensCss(collections, variables, variablesById),
+    typographyCss: buildTypographyCssFromTextStyles(
+      textStyles,
+      variablesById,
+      variables,
+    ),
     colorVariableCount: variables.filter(
       (variable) => variable.resolvedType === "COLOR",
     ).length,

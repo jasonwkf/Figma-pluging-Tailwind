@@ -9,10 +9,17 @@
 
   <section class="toolbar" aria-label="Export controls">
     <button id="refresh" type="button">Refresh</button>
-    <button id="copy" type="button">Copy JSON</button>
     <button id="download" type="button">Download</button>
-    <button id="download-base-css" type="button">Download Tailwind 4 base.css</button>
   </section>
+
+  <div class="download-group" aria-label="Tailwind 4 downloads">
+    <h2>Tailwind 4</h2>
+    <div class="toolbar">
+    <button id="download-base-css" type="button">Download base.css</button>
+    <button id="download-color-tokens-css" type="button">Download color-tokens.css</button>
+    <button id="download-typography-css" type="button">Download typography.css</button>
+    </div>
+  </div>
 
   <dl class="stats" aria-label="Variable export summary">
     <div>
@@ -28,8 +35,6 @@
       <dd id="color-variable-count">0</dd>
     </div>
   </dl>
-
-  <pre id="output">Loading variables...</pre>
 </main>
 
 <style>
@@ -49,9 +54,9 @@
   main {
     box-sizing: border-box;
     display: grid;
-    grid-template-rows: auto auto auto 1fr;
+    grid-template-rows: auto auto auto auto;
     gap: 12px;
-    height: 100%;
+    height: auto;
     padding: 16px;
   }
 
@@ -69,6 +74,14 @@
     font-weight: 650;
   }
 
+  h2 {
+    margin: 0;
+    color: #1f2328;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 650;
+  }
+
   p {
     margin: 4px 0 0;
     color: #626a73;
@@ -78,6 +91,7 @@
 
   button {
     min-height: 32px;
+    height: 32px;
     border: 1px solid #c9ced6;
     border-radius: 6px;
     padding: 0 12px;
@@ -109,6 +123,11 @@
     flex-wrap: wrap;
   }
 
+  .download-group {
+    display: grid;
+    gap: 8px;
+  }
+
   .stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -138,36 +157,24 @@
     font-weight: 650;
   }
 
-  pre {
-    min-height: 0;
-    margin: 0;
-    overflow: auto;
-    border: 1px solid #d8dee4;
-    border-radius: 6px;
-    padding: 12px;
-    background: #0d1117;
-    color: #e6edf3;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 11px;
-    line-height: 16px;
-    white-space: pre;
-  }
 </style>
 
 <script>
   const statusEl = document.getElementById("status");
-  const outputEl = document.getElementById("output");
   const collectionCountEl = document.getElementById("collection-count");
   const variableCountEl = document.getElementById("variable-count");
   const colorVariableCountEl = document.getElementById("color-variable-count");
   const refreshButton = document.getElementById("refresh");
-  const copyButton = document.getElementById("copy");
   const downloadButton = document.getElementById("download");
   const downloadBaseCssButton = document.getElementById("download-base-css");
+  const downloadColorTokensCssButton = document.getElementById("download-color-tokens-css");
+  const downloadTypographyCssButton = document.getElementById("download-typography-css");
   const closeButton = document.getElementById("close");
 
   let currentJson = "";
   let currentBaseCss = "";
+  let currentColorTokensCss = "";
+  let currentTypographyCss = "";
   let currentFileName = "figma-variables";
 
   function postPluginMessage(message) {
@@ -176,9 +183,10 @@
 
   function setBusy(isBusy) {
     refreshButton.disabled = isBusy;
-    copyButton.disabled = isBusy || !currentJson;
     downloadButton.disabled = isBusy || !currentJson;
     downloadBaseCssButton.disabled = isBusy || !currentBaseCss;
+    downloadColorTokensCssButton.disabled = isBusy || !currentColorTokensCss;
+    downloadTypographyCssButton.disabled = isBusy || !currentTypographyCss;
   }
 
   function setStatus(message) {
@@ -202,45 +210,30 @@
   function showLoading() {
     setBusy(true);
     setStatus("Loading variables...");
-    outputEl.textContent = "Loading variables...";
   }
 
   function showVariablesJson(data) {
     currentJson = JSON.stringify(data, null, 2);
     currentBaseCss = data.baseCss || "";
+    currentColorTokensCss = data.colorTokensCss || "";
+    currentTypographyCss = data.typographyCss || "";
     currentFileName = normalizeFileName(data.fileName);
 
     setCounts(data.collectionCount, data.variableCount, data.colorVariableCount || 0);
     setStatus(
       `Ready to export ${data.variableCount} variables and ${data.colorVariableCount || 0} colors.`,
     );
-    outputEl.textContent = currentJson;
     setBusy(false);
   }
 
   function showError(error) {
     currentJson = "";
     currentBaseCss = "";
+    currentColorTokensCss = "";
+    currentTypographyCss = "";
     setCounts(0, 0, 0);
-    setStatus("Export failed.");
-    outputEl.textContent = `Could not read Figma variables:\n${error}`;
+    setStatus(`Export failed: ${error}`);
     setBusy(false);
-  }
-
-  async function copyJson() {
-    if (!currentJson) return;
-
-    try {
-      await navigator.clipboard.writeText(currentJson);
-      setStatus("JSON copied to clipboard.");
-    } catch (_error) {
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(outputEl);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      setStatus("JSON selected. Copy it with your keyboard shortcut.");
-    }
   }
 
   function downloadJson() {
@@ -258,28 +251,43 @@
     setStatus("JSON download started.");
   }
 
-  function downloadBaseCss() {
-    if (!currentBaseCss) return;
+  function downloadCssFile(fileName, contents) {
+    if (!contents) return;
 
-    const blob = new Blob([currentBaseCss], { type: "text/css" });
+    const blob = new Blob([contents], { type: "text/css" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "base.css";
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
+  }
+
+  function downloadBaseCss() {
+    downloadCssFile("base.css", currentBaseCss);
     setStatus("base.css download started.");
+  }
+
+  function downloadColorTokensCss() {
+    downloadCssFile("color-tokens.css", currentColorTokensCss);
+    setStatus("color-tokens.css download started.");
+  }
+
+  function downloadTypographyCss() {
+    downloadCssFile("typography.css", currentTypographyCss);
+    setStatus("typography.css download started.");
   }
 
   refreshButton.addEventListener("click", () => {
     postPluginMessage({ type: "refresh-variables" });
   });
 
-  copyButton.addEventListener("click", copyJson);
   downloadButton.addEventListener("click", downloadJson);
   downloadBaseCssButton.addEventListener("click", downloadBaseCss);
+  downloadColorTokensCssButton.addEventListener("click", downloadColorTokensCss);
+  downloadTypographyCssButton.addEventListener("click", downloadTypographyCss);
 
   closeButton.addEventListener("click", () => {
     postPluginMessage({ type: "close-plugin" });
