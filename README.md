@@ -1,40 +1,63 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+# Figma Variables to Tailwind Exporter
 
-  https://www.figma.com/plugin-docs/plugin-quickstart-guide/
+This repo contains a Figma plugin that exports local Figma Variables and Text Styles into Tailwind-ready files.
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+The purpose of the plugin is to help move design tokens from Figma into frontend code in two formats:
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+1. Tailwind 4 CSS-first output.
+2. Tailwind 3 config and CSS output.
 
-  https://nodejs.org/en/download/
+## What It Exports
 
-Next, install TypeScript using the command:
+### Tailwind 4
 
-  npm install -g typescript
+The plugin generates:
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+- `base.css`: non-color design tokens emitted in `@theme`.
+- `color-tokens.css`: color variables emitted in `@theme`.
+- `typography.css`: text style utilities emitted with Tailwind 4 utility syntax.
 
-  npm install --save-dev @figma/plugin-typings
+### Tailwind 3
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+The plugin generates:
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+- `tailwind.config.js`: CommonJS Tailwind config with `content`, `darkmode`, `theme.fontFamily`, `theme.colors`, and `theme.backgroundColors`.
+- `index.css`: CSS custom properties emitted under a top-level `:root` block.
 
-For more information, visit https://www.typescriptlang.org/
+## How It Reads Figma Data
 
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
+The plugin reads local Figma data from the main plugin context with:
 
-We recommend writing TypeScript code using Visual Studio code:
+```ts
+figma.variables.getLocalVariableCollectionsAsync()
+figma.variables.getLocalVariablesAsync()
+figma.getLocalTextStylesAsync()
+```
 
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
+Variables are normalized into CSS-safe token names, converted into CSS values, and then assembled into downloadable files in the plugin UI.
 
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+## Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Build the plugin:
+
+```bash
+npm run build
+```
+
+Watch TypeScript changes:
+
+```bash
+npm run watch
+```
+
+The Figma plugin manifest points to `code.js` and `ui.html`.
+
+## Product Notes
+
+See [PRD.md](./PRD.md) for the detailed Tailwind 3 and Tailwind 4 export behavior, including how Figma API values are read, how keys are generated, and how the downloaded files are assembled.

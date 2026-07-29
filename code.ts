@@ -1534,6 +1534,10 @@ function isIndexTypographyVariable(cssName: string): boolean {
   );
 }
 
+function isFontFamilyCssName(cssName: string): boolean {
+  return cssName.indexOf("--family-") === 0;
+}
+
 function makeIndexCssValue(
   cssName: string,
   value: unknown,
@@ -1549,6 +1553,65 @@ function makeIndexCssValue(
   }
 
   return makeTextCssValue(value);
+}
+
+function getTailwind3FontFamilySans(
+  collections: LocalVariableCollection[],
+  variables: LocalVariable[],
+): string[] {
+  const collectionById = collections.reduce<{
+    [id: string]: LocalVariableCollection;
+  }>((byId, collection) => {
+    byId[collection.id] = collection;
+    return byId;
+  }, {});
+  const usedNames: { [cssName: string]: number } = {};
+  const fontFamilyValues: string[] = [];
+  const seenValues: { [value: string]: boolean } = {};
+  const fontFamilyVariables = variables
+    .filter((variable) => {
+      const category = getBaseCssCategory(variable);
+
+      if (category !== "typography") {
+        return false;
+      }
+
+      return isFontFamilyCssName(toBaseCssCustomPropertyName(variable, category));
+    })
+    .sort((first, second) => first.name.localeCompare(second.name));
+
+  for (const variable of fontFamilyVariables) {
+    const collection = collectionById[variable.variableCollectionId];
+
+    if (!collection) {
+      continue;
+    }
+
+    const cssName = makeUniqueCssName(
+      toBaseCssCustomPropertyName(variable, "typography"),
+      variable,
+      usedNames,
+    );
+    const cssValue = makeIndexCssValue(
+      cssName,
+      variable.valuesByMode[collection.defaultModeId],
+      variable,
+      {},
+    );
+
+    if (!cssValue) {
+      continue;
+    }
+
+    const fontFamilyValue = `var(${cssName})`;
+
+    if (!seenValues[fontFamilyValue]) {
+      fontFamilyValues.push(fontFamilyValue);
+      seenValues[fontFamilyValue] = true;
+    }
+  }
+
+  return fontFamilyValues.concat(["Arial", "sans-serif"]);
 }
 
 function buildTailwind3IndexCss(
@@ -1660,9 +1723,9 @@ function buildTailwind3IndexCss(
     declarations.push(`    ${cssName}: ${cssValue};`);
   }
 
-  return `/* Generated ${generatedAt} */\n\n@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n@layer base {\n  :root {\n${declarations.join(
+  return `/* Generated ${generatedAt} */\n\n:root {\n${declarations.join(
     "\n",
-  )}\n  }\n}\n`;
+  )}\n}\n`;
 }
 
 function toJsObjectLiteral(value: unknown, indentLevel = 0): string {
@@ -1677,6 +1740,16 @@ function toJsObjectLiteral(value: unknown, indentLevel = 0): string {
     return JSON.stringify(value);
   }
 
+  if (Array.isArray(value)) {
+    if (value.length === 0) {
+      return "[]";
+    }
+
+    return `[\n${value
+      .map((item) => `${nextIndent}${toJsObjectLiteral(item, indentLevel + 1)},`)
+      .join("\n")}\n${indent}]`;
+  }
+
   const objectValue = value as { [key: string]: unknown };
   const keys = Object.keys(objectValue);
 
@@ -1687,6 +1760,7 @@ function toJsObjectLiteral(value: unknown, indentLevel = 0): string {
   return `{\n${keys
     .map((key) => {
       const objectKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key)
+        || /^[0-9]+$/.test(key)
         ? key
         : JSON.stringify(key);
 
@@ -1696,6 +1770,29 @@ function toJsObjectLiteral(value: unknown, indentLevel = 0): string {
       )},`;
     })
     .join("\n")}\n${indent}}`;
+}
+
+function normalizeRepeatedTailwindColorPrefix(key: string): string {
+  const duplicatedPrefixes = [
+    "button",
+    "icon",
+    "divider",
+    "control",
+    "link",
+    "logo",
+    "text",
+    "input",
+  ];
+
+  for (const prefix of duplicatedPrefixes) {
+    const duplicatedPrefix = `${prefix}-${prefix}-`;
+
+    if (key.indexOf(duplicatedPrefix) === 0) {
+      return `${prefix}-${key.slice(duplicatedPrefix.length)}`;
+    }
+  }
+
+  return key;
 }
 
 function getBackgroundColorKey(name: string): string | null {
@@ -1714,7 +1811,9 @@ function getBackgroundColorKey(name: string): string | null {
   if (backgroundIndex !== -1) {
     const keyPath = removeBackgroundPrefix(path.slice(backgroundIndex + 1));
 
-    return keyPath.length > 0 ? keyPath.join("-") : "DEFAULT";
+    return keyPath.length > 0
+      ? normalizeRepeatedTailwindColorPrefix(keyPath.join("-"))
+      : "DEFAULT";
   }
 
   const prefixedBackgroundIndex = path.findIndex(
@@ -1727,7 +1826,9 @@ function getBackgroundColorKey(name: string): string | null {
 
   const keyPath = removeBackgroundPrefix(path.slice(prefixedBackgroundIndex));
 
-  return keyPath.length > 0 ? keyPath.join("-") : "DEFAULT";
+  return keyPath.length > 0
+    ? normalizeRepeatedTailwindColorPrefix(keyPath.join("-"))
+    : "DEFAULT";
 }
 
 function getTailwindColorKey(name: string): string {
@@ -1738,7 +1839,53 @@ function getTailwindColorKey(name: string): string {
     "colours",
   ]);
 
-  return path.length > 0 ? path.join("-") : "DEFAULT";
+  return path.length > 0
+    ? normalizeRepeatedTailwindColorPrefix(path.join("-"))
+    : "DEFAULT";
+}
+
+function getTailwindColorKeyFromCssName(cssName: string): string | null {
+  const match = cssName.match(
+    /^--color-(blue|red|grey|pink|yellow|crimson)-(.+)$/,
+  );
+
+  if (!match) {
+    return null;
+  }
+
+  return `${match[1]}-${match[2]}`;
+}
+
+function setTailwindColorValue(
+  colors: { [key: string]: string | { [key: string]: string } },
+  key: string,
+  value: string,
+): void {
+  const primitiveColorNames = ["blue", "red", "grey", "pink", "yellow", "crimson"];
+  const segments = key.split("-");
+  const colorName = segments[0];
+  const shadeName = segments.slice(1).join("-");
+
+  if (
+    primitiveColorNames.indexOf(colorName) === -1 ||
+    !shadeName ||
+    key === colorName
+  ) {
+    colors[key] = value;
+    return;
+  }
+
+  const currentColor = colors[colorName];
+
+  if (
+    typeof currentColor !== "object" ||
+    currentColor === null ||
+    Array.isArray(currentColor)
+  ) {
+    colors[colorName] = {};
+  }
+
+  (colors[colorName] as { [key: string]: string })[shadeName] = value;
 }
 
 function buildTailwind3Config(
@@ -1746,62 +1893,71 @@ function buildTailwind3Config(
   variables: LocalVariable[],
   variablesById: { [id: string]: LocalVariable },
 ): string {
-  const colorCollection = collections.filter(isColorCollection)[0];
+  const collectionById = collections.reduce<{
+    [id: string]: LocalVariableCollection;
+  }>((byId, collection) => {
+    byId[collection.id] = collection;
+    return byId;
+  }, {});
   const backgroundColor: { [key: string]: string } = {};
-  const colors: { [key: string]: string } = {};
+  const colors: { [key: string]: string | { [key: string]: string } } = {};
+  const fontFamily = {
+    sans: getTailwind3FontFamilySans(collections, variables),
+  };
 
-  if (colorCollection) {
-    const lightMode =
-      colorCollection.modes.filter(isLightMode)[0] ||
-      colorCollection.modes.filter(
-        (mode) => mode.modeId === colorCollection.defaultModeId,
-      )[0];
-    const baseColorValueMap = getBaseColorValueMap(
-      collections,
-      variables,
-      variablesById,
-    );
+  const colorVariables = variables
+    .filter((variable) => variable.resolvedType === "COLOR")
+    .sort((first, second) => {
+      const firstCollection = collectionById[first.variableCollectionId];
+      const secondCollection = collectionById[second.variableCollectionId];
+      const collectionSort = (firstCollection?.name || "").localeCompare(
+        secondCollection?.name || "",
+      );
 
-    if (lightMode) {
-      const collectionVariables = variables
-        .filter(
-          (variable) =>
-            variable.variableCollectionId === colorCollection.id &&
-            variable.resolvedType === "COLOR",
-        )
-        .sort((first, second) => first.name.localeCompare(second.name));
+      return collectionSort || first.name.localeCompare(second.name);
+    });
 
-      for (const variable of collectionVariables) {
-        const backgroundKey = getBackgroundColorKey(variable.name);
-        const colorKey = getTailwindColorKey(variable.name);
+  for (const variable of colorVariables) {
+    const collection = collectionById[variable.variableCollectionId];
 
-        const modeValue = variable.valuesByMode[lightMode.modeId];
-        let cssValue = makeColorCssValue(modeValue, variablesById);
+    if (!collection) {
+      continue;
+    }
 
-        if (isColorValue(modeValue)) {
-          const baseVariableName = baseColorValueMap[colorToCss(modeValue)];
+    const mode =
+      collection.modes.filter(isLightMode)[0] ||
+      collection.modes.filter((item) => item.modeId === collection.defaultModeId)[0];
 
-          if (baseVariableName) {
-            cssValue = `var(${baseVariableName})`;
-          }
-        }
+    if (!mode) {
+      continue;
+    }
 
-        if (cssValue) {
-          if (backgroundKey) {
-            backgroundColor[backgroundKey] = cssValue;
-          } else {
-            colors[colorKey] = cssValue;
-          }
-        }
+    const cssName = toCssCustomPropertyName(variable.name);
+    const cssVariableValue = `var(${cssName})`;
+    const backgroundKey = getBackgroundColorKey(variable.name);
+    const colorKey =
+      getTailwindColorKeyFromCssName(cssName) || getTailwindColorKey(variable.name);
+
+    if (backgroundKey) {
+      const modeValue = variable.valuesByMode[mode.modeId];
+      const cssValue = makeColorCssValue(modeValue, variablesById);
+
+      if (cssValue) {
+        backgroundColor[backgroundKey] = cssValue;
       }
+    } else {
+      setTailwindColorValue(colors, colorKey, cssVariableValue);
     }
   }
 
-  return `const defaultTheme = require("tailwindcss/defaultTheme");\n\n// Tailwind 3 config generated from Figma variables\nexport default ${toJsObjectLiteral(
+  return `module.exports = ${toJsObjectLiteral(
     {
+      content: ["./src/**/*.{astro,html,js,jsx,ts,tsx,vue}"],
+      darkmode: "class",
       theme: {
+        fontFamily,
         colors,
-        backgroundColor,
+        backgroundColors: backgroundColor,
       },
     },
   )};\n`;
