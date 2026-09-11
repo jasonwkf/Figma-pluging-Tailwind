@@ -5,7 +5,7 @@
   "main": "code.js",
   "scripts": {
     "build:tsc": "tsc -p tsconfig.json",
-    "build": "node scripts/build-with-env.mjs",
+    "build": "npm run build:tsc",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
     "watch": "npm run build:tsc -- --watch"
@@ -41,9 +41,5 @@
         }
       ]
     }
-  },
-  "dependencies": {
-    "@google-cloud/translate": "^9.3.0",
-    "react": "^19.2.4"
   }
 }
