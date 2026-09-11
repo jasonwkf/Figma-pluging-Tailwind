@@ -13,6 +13,34 @@ The plugin must:
 
 The agent should prefer correctness, deterministic output, and recoverable handling of incomplete design-token data over clever shortcuts.
 
+## Figma MCP Export Workflow
+
+For the ZB Design System workflow, refresh the source token bundle through Figma MCP before generating Tailwind output:
+
+1. Retrieve all local Figma variable collections, modes, variables, values, and aliases through Figma MCP.
+2. Retrieve large responses in bounded batches when necessary.
+3. Assemble the batches into `tokens/figma-variables.json`. The batch assembler must deduplicate variables by ID and checkpoint valid JSON after each batch.
+4. Treat `tokens/figma-variables.json` as the source of truth for local generation.
+5. Run `npm run tailwind:output` to generate the requested files:
+
+   ```text
+   tokens/primitives.json       -> tailwind/base.css
+   tokens/colour-token.json     -> tailwind/colour-token.css
+   tokens/typography.json      -> tailwind/typography.css
+   ```
+
+Figma MCP is invoked by the implementation agent. The npm command only reads the local JSON bundle and transforms it; it does not connect to Figma MCP directly.
+
+The generated naming must collapse repeated segments and follow the established Tailwind structure, for example:
+
+```text
+Colour/Yellow/yellow-100       -> --color-yellow-100
+Spacing/spacing-4              -> --spacing-4
+Typography/Weight/font-weight-bold -> --font-weight-bold
+```
+
+The typography output must use Tailwind v4 `@utility text-*` blocks and reference primitive variables such as `var(--size-18)`, `var(--line-height-md)`, and `var(--font-weight-regular)`.
+
 ## Target Architecture
 
 Use a small pipeline with explicit boundaries:

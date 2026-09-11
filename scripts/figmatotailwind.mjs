@@ -1,27 +1,11 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
-import { readFileSync } from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const desktopPath = path.join(os.homedir(), "Desktop");
 const defaultOutputPath = path.resolve("tailwind");
 const defaultTokenPath = path.resolve("tokens/figma-variables.json");
-
-function loadDotEnv() {
-  try {
-    const contents = readFileSync(".env", "utf8");
-    for (const line of contents.split(/\r?\n/)) {
-      const match = line.match(/^\s*(?:export\s+)?([A-Z][A-Z0-9_]*)\s*=\s*(.*)\s*$/);
-      if (!match || process.env[match[1]]) continue;
-      process.env[match[1]] = match[2].replace(/^['"]|['"]$/g, "");
-    }
-  } catch (_error) {
-    // Shell environment variables are also supported.
-  }
-}
 
 function toTokenPath(name) {
   return String(name || "unnamed").split("/").map((segment) => segment.trim()
@@ -85,103 +69,12 @@ function normalizeCssSegments(parts) {
   return normalized;
 }
 
-function valueToCss(variable, value, variablesById) {
-  if (isAlias(value)) {
-    const target = variablesById[value.id];
-    return target ? `var(${cssName(target)})` : null;
-  }
-  if (variable.resolvedType === "COLOR" && value && typeof value.r === "number") return colorToCss(value);
-  if (typeof value === "number" && Number.isFinite(value)) {
-    if (value === 0) return "0";
-    const parts = toTokenPath(variable.name);
-    if (parts.includes("font-weight") || (parts.includes("line-height") && value <= 10)) return String(value);
-    return `${value}px`;
-  }
-  if (typeof value === "boolean") return value ? "true" : "false";
-  if (typeof value === "string" && value.trim()) return value.includes(" ") ? `"${value.replaceAll('"', '\\"')}"` : value;
-  return null;
-}
-
-async function fetchFigmaVariables(fileKey, token) {
-  const url = `https://api.figma.com/v1/files/${encodeURIComponent(fileKey)}/variables/local`;
-  const response = await fetch(url, { headers: { "X-Figma-Token": token } });
-  const body = await response.json();
-  if (!response.ok || body.error) throw new Error(body.message || `Figma API request failed (${response.status}).`);
-  return {
-    variables: Object.values(body.meta?.variables || {}),
-    collections: Object.values(body.meta?.variableCollections || {}),
-  };
-}
-
-function getFigmaFileKey(figmaUrl) {
-  let parsedUrl;
-  try {
-    parsedUrl = new URL(figmaUrl);
-  } catch (_error) {
-    throw new Error(`Invalid Figma URL: ${figmaUrl}`);
-  }
-
-  const match = parsedUrl.pathname.match(/^\/design\/([^/]+)/);
-  if (!match) {
-    throw new Error("Figma URL must use the /design/:fileKey/... format.");
-  }
-  return decodeURIComponent(match[1]);
-}
-
-/**
- * Fetch local variables as JSON from a Figma design URL.
- *
- * The URL may include a node-id, but variables are fetched at file scope, so
- * the node-id is intentionally ignored.
- */
-async function fetchFigmaVariablesFromUrl(figmaUrl, token) {
-  const fileKey = getFigmaFileKey(figmaUrl);
-  const data = await fetchFigmaVariables(fileKey, token);
-  return { ...data, fileKey, sourceUrl: figmaUrl };
-}
 
 function makeUniqueName(name, variable, usedNames) {
   if (!usedNames[name]) { usedNames[name] = 1; return name; }
   usedNames[name] += 1;
   const suffix = toTokenPath(variable.key || variable.id).join("-").slice(0, 16) || usedNames[name];
   return `${name}-${suffix}`;
-}
-
-function buildArtifacts(collections, variables, variablesById) {
-  const theme = [];
-  const colors = [];
-  const utilities = new Map();
-  const usedNames = {};
-  const collectionById = Object.fromEntries(collections.map((collection) => [collection.id, collection]));
-
-  for (const variable of [...variables].sort((a, b) => a.name.localeCompare(b.name))) {
-    const collection = collectionById[variable.variableCollectionId];
-    if (!collection) continue;
-    const value = variable.valuesByMode?.[collection.defaultModeId];
-    const cssValue = valueToCss(variable, value, variablesById);
-    if (!cssValue) continue;
-    const name = makeUniqueName(cssName(variable), variable, usedNames);
-    const parts = toTokenPath(variable.name);
-    const isTypography = parts.includes("typography") || parts.includes("type");
-    if (variable.resolvedType === "COLOR") colors.push(`  ${name}: ${cssValue};`);
-    else theme.push(`  ${name}: ${cssValue};`);
-
-    const properties = { "font-family": "font-family", "font-size": "font-size", "line-height": "line-height", "font-weight": "font-weight", "letter-spacing": "letter-spacing", "text-case": "text-transform", "text-transform": "text-transform" };
-    const property = isTypography ? properties[parts.at(-1)] : null;
-    if (property) {
-      const selector = `.type-${parts.slice(1, -1).join("-") || "unnamed"}`;
-      if (!utilities.has(selector)) utilities.set(selector, []);
-      utilities.get(selector).push(`    ${property}: ${cssValue};`);
-    }
-  }
-
-  const header = "/* Generated from Figma Variables REST API */\n\n";
-  const baseCss = `${header}@theme {\n${theme.join("\n")}\n}\n`;
-  const colorTokensCss = `${header}@theme {\n${colors.join("\n")}\n}\n`;
-  const typographyCss = `${header}@layer utilities {\n${[...utilities].map(([selector, declarations]) => `  ${selector} {\n${declarations.join("\n")}\n  }`).join("\n\n")}\n}\n`;
-  const indexCss = `${header}:root {\n${[...theme, ...colors].join("\n")}\n}\n`;
-  const tailwindConfig = `/** Generated from Figma Variables REST API */\nmodule.exports = {\n  theme: { extend: {} }\n};\n`;
-  return { baseCss, colorTokensCss, typographyCss, indexCss, tailwindConfig };
 }
 
 function round(value, digits = 4) {
@@ -219,51 +112,7 @@ function buildTailwindFiles(bundle) {
   for (const variable of [...variables].sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))) {
     cssNames.set(variable.id, makeUniqueName(cssName(variable), variable, usedNames));
   }
-
-  const declarationsForMode = (collection, modeId) => variables
-    .filter((variable) => variable.collectionId === collection.id)
-    .sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
-    .map((variable) => {
-      const value = variable.valuesByMode?.[modeId];
-      const cssValue = valueToTailwindCss(variable, value, variablesById, cssNames);
-      return cssValue ? `  ${cssNames.get(variable.id)}: ${cssValue};` : null;
-    })
-    .filter(Boolean);
-
-  const themeBlocks = [];
-  for (const collection of [...collections].sort((a, b) => a.name.localeCompare(b.name))) {
-    for (const mode of collection.modes) {
-      const declarations = declarationsForMode(collection, mode.id);
-      if (!declarations.length) continue;
-      const isDefault = mode.id === collection.defaultModeId;
-      const selector = `[data-${collection.normalizedName}-mode="${mode.normalizedName}"]`;
-      themeBlocks.push(`${isDefault ? "@theme" : selector} {\n${declarations.join("\n")}\n}`);
-    }
-  }
-
-  const typographyGroups = new Map();
-  const typographyProperties = {
-    "font-family": "font-family", "font-size": "font-size", "line-height": "line-height",
-    "font-weight": "font-weight", "letter-spacing": "letter-spacing", "text-case": "text-transform",
-    "text-transform": "text-transform", "paragraph-indent": "text-indent"
-  };
-  for (const variable of variables) {
-    const parts = toTokenPath(variable.name);
-    const property = typographyProperties[parts.at(-1)];
-    const typographyIndex = parts.findIndex((part) => ["typography", "type"].includes(part));
-    if (!property || typographyIndex < 0 || parts.length < typographyIndex + 2) continue;
-    const selector = `.type-${parts.slice(typographyIndex + 1, -1).join("-") || "unnamed"}`;
-    if (!typographyGroups.has(selector)) typographyGroups.set(selector, []);
-    const collection = collections.find((item) => item.id === variable.collectionId);
-    const value = collection && variable.valuesByMode?.[collection.defaultModeId];
-    const cssValue = valueToTailwindCss(variable, value, variablesById, cssNames);
-    if (cssValue) typographyGroups.get(selector).push(`    ${property}: ${cssValue};`);
-  }
-
   const header = "/* Generated from tokens/figma-variables.json via Figma MCP */\n\n";
-  const tokensCss = `${header}@import "tailwindcss";\n\n${themeBlocks.join("\n\n")}\n\n@layer utilities {\n${[...typographyGroups].map(([selector, declarations]) => `  ${selector} {\n${declarations.join("\n")}\n  }`).join("\n\n")}\n}\n`;
-  const themeCss = `${header}@theme {\n${themeBlocks.filter((block) => block.startsWith("@theme")).flatMap((block) => block.split("\n").slice(1, -1)).join("\n")}\n}\n`;
-  const utilitiesCss = `${header}@layer utilities {\n${[...typographyGroups].map(([selector, declarations]) => `  ${selector} {\n${declarations.join("\n")}\n  }`).join("\n\n")}\n}\n`;
   const primitiveCollection = collections.find((collection) => collection.name.toLowerCase() === "primitives");
   const primitiveVariables = primitiveCollection ? variables.filter((variable) => variable.collectionId === primitiveCollection.id) : [];
   const primitiveBundle = {
@@ -285,18 +134,96 @@ function buildTailwindFiles(bundle) {
     })
     .filter(Boolean);
   const baseCss = `${header}@theme {\n${primitiveDeclarations.join("\n")}\n}\n`;
+  const colours = buildColourTokenFiles(bundle, cssNames, variablesById, header);
+  const typography = buildTypographyFiles(bundle, cssNames, variablesById, header);
 
   return {
-    "tokens/figma-tokens.json": JSON.stringify(bundle, null, 2),
-    "tokens/collections.json": JSON.stringify(collections, null, 2),
-    "tokens/variables.json": JSON.stringify(variables, null, 2),
     "tokens/primitives.json": JSON.stringify(primitiveBundle, null, 2),
-    "tokens/aliases.json": JSON.stringify(bundle.aliases || [], null, 2),
-    "tokens/validation.json": JSON.stringify(bundle.validation || { errors: [], warnings: [] }, null, 2),
-    "tailwind/tokens.css": tokensCss,
-    "tailwind/tokens.theme.css": themeCss,
-    "tailwind/tokens.utilities.css": utilitiesCss,
-    "tailwind/base.css": baseCss
+    "tailwind/base.css": baseCss,
+    ...colours,
+    ...typography
+  };
+}
+
+function buildColourTokenFiles(bundle, cssNames, variablesById, header = "") {
+  const collection = bundle.collections.find((item) => item.name.toLowerCase() === "colours" || item.name.toLowerCase() === "colors");
+  const variables = collection
+    ? bundle.variables.filter((variable) => variable.collectionId === collection.id).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
+    : [];
+  const colourBundle = {
+    ...bundle,
+    collections: collection ? [collection] : [],
+    variables,
+    aliases: (bundle.aliases || []).filter((alias) => variables.some((variable) => variable.id === alias.fromVariableId))
+  };
+  const declarations = variables.map((variable) => {
+    const value = variable.valuesByMode?.[collection.defaultModeId];
+    const cssValue = valueToTailwindCss(variable, value, variablesById, cssNames);
+    return cssValue ? `  ${cssNames.get(variable.id)}: ${cssValue};` : null;
+  }).filter(Boolean);
+  const css = `${header}@theme {\n${declarations.join("\n")}\n}\n`;
+  return {
+    "tokens/colour-token.json": JSON.stringify(colourBundle, null, 2),
+    "tailwind/colour-token.css": css
+  };
+}
+
+function buildTypographyFiles(bundle, cssNames, variablesById, header = "") {
+  const collection = bundle.collections.find((item) => item.name.toLowerCase() === "font adjustment");
+  const variables = collection
+    ? bundle.variables.filter((variable) => variable.collectionId === collection.id).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
+    : [];
+  const typographyBundle = {
+    ...bundle,
+    collections: collection ? [collection] : [],
+    variables,
+    aliases: (bundle.aliases || []).filter((alias) => variables.some((variable) => variable.id === alias.fromVariableId))
+  };
+  const primitiveVariables = bundle.variables.filter((variable) => bundle.collections.find((item) => item.name.toLowerCase() === "primitives")?.id === variable.collectionId);
+  const primitiveValueReference = (tokenPrefix, value) => {
+    const normalizedValue = String(value).toLowerCase();
+    const expectedSuffix = `/${normalizedValue.startsWith(`${tokenPrefix}-`) ? normalizedValue : `${tokenPrefix}-${normalizedValue}`}`;
+    const match = primitiveVariables.find((variable) => variable.name.toLowerCase().endsWith(expectedSuffix));
+    return match ? `var(${cssNames.get(match.id) || cssName(match)})` : `${value}px`;
+  };
+  const styles = {
+    body: ["line-height-md", "font-weight-regular", "letter-spacing-sm"],
+    button: ["line-height-sm", "font-weight-medium", "letter-spacing-md"],
+    display: ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
+    header: ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
+    label: ["line-height-sm", "font-weight-regular", "letter-spacing-none"],
+    subheader: ["line-height-sm", "font-weight-medium", "letter-spacing-sm"]
+  };
+  const overrides = {
+    "body 2": ["line-height-sm", "font-weight-regular", "letter-spacing-none"],
+    "button 2": ["line-height-sm", "font-weight-regular", "letter-spacing-md"],
+    "button 3": ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
+    "button 4": ["line-height-sm", "font-weight-medium", "letter-spacing-md"],
+    "header 3": ["line-height-sm", "font-weight-regular", "letter-spacing-none"],
+    "label 1": ["line-height-sm", "font-weight-medium", "letter-spacing-md"],
+    "label 3": ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
+    "label 5": ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
+    "label 7": ["line-height-sm", "font-weight-medium", "letter-spacing-md"],
+    "label 8": ["line-height-sm", "font-weight-regular", "letter-spacing-md"],
+    "label 9": ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
+    "subheader 1": ["line-height-sm", "font-weight-light", "letter-spacing-none"],
+    "subheader 2": ["line-height-md", "font-weight-medium", "letter-spacing-sm"],
+    "subheader 3": ["line-height-sm", "font-weight-medium", "letter-spacing-sm"]
+  };
+  const utilityBlocks = variables.map((variable) => {
+    const value = variable.valuesByMode?.[collection.defaultModeId];
+    if (typeof value !== "number") return null;
+    const name = variable.name.trim();
+    const key = name.toLowerCase();
+    const family = key.split(" ")[0];
+    const [lineHeight, weight, letterSpacing] = overrides[key] || styles[family] || styles.label;
+    const className = `text-${toTokenPath(name).join("").replace(/-(?=\d)/g, "").replace(/[^a-z0-9-]/g, "")}`;
+    return `@utility ${className} {\n    font-size: ${primitiveValueReference("size", value)};\n    line-height: ${primitiveValueReference("line-height", lineHeight)};\n    font-weight: ${primitiveValueReference("font-weight", weight)};\n    letter-spacing: ${primitiveValueReference("letter-spacing", letterSpacing)};\n}`;
+  }).filter(Boolean);
+  const css = `${header}${utilityBlocks.join("\n\n")}\n`;
+  return {
+    "tokens/typography.json": JSON.stringify(typographyBundle, null, 2),
+    "tailwind/typography.css": css
   };
 }
 
@@ -351,21 +278,9 @@ async function writeTokenBundleInBatches({ collections, batches, outputPath = de
 }
 
 async function main() {
-  loadDotEnv();
-  const token = process.env.FIGMA_TOKEN;
-  const fileKey = process.env.FIGMA_FILE_KEY;
-  const fileUrl = process.env.FIGMA_FILE_URL;
   const tokenPath = path.resolve(process.argv[2] || process.env.FIGMA_VARIABLES_JSON || defaultTokenPath);
   const outputPath = path.resolve(process.env.FIGMA_OUTPUT_DIR || defaultOutputPath);
-  let bundle;
-  if (token && (fileUrl || fileKey) && process.env.FIGMA_REFRESH === "true") {
-    const raw = fileUrl ? await fetchFigmaVariablesFromUrl(fileUrl, token) : await fetchFigmaVariables(fileKey, token);
-    bundle = { ...raw, schemaVersion: "1.0.0", source: { tool: "figma-rest-variables", fileKey: raw.fileKey || fileKey, fileUrl: raw.sourceUrl || fileUrl, exportedAt: new Date().toISOString() }, aliases: [], validation: { errors: [], warnings: [] } };
-    await fs.mkdir(path.dirname(tokenPath), { recursive: true });
-    await fs.writeFile(tokenPath, JSON.stringify(bundle, null, 2), "utf8");
-  } else {
-    bundle = JSON.parse(await fs.readFile(tokenPath, "utf8"));
-  }
+  const bundle = JSON.parse(await fs.readFile(tokenPath, "utf8"));
   const files = buildTailwindFiles(bundle);
   await Promise.all(Object.entries(files).map(async ([fileName, contents]) => {
     const target = path.join(path.dirname(outputPath), fileName);

@@ -1,0 +1,169 @@
+/* Generated from tokens/figma-variables.json via Figma MCP */
+
+@utility text-body1 {
+    font-size: var(--size-18);
+    line-height: var(--line-height-md);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-sm);
+}
+
+@utility text-body2 {
+    font-size: var(--size-16);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-button1 {
+    font-size: var(--size-16);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-md);
+}
+
+@utility text-button2 {
+    font-size: var(--size-16);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-md);
+}
+
+@utility text-button3 {
+    font-size: var(--size-12);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-button4 {
+    font-size: var(--size-14);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-md);
+}
+
+@utility text-display1 {
+    font-size: var(--size-32);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-header1 {
+    font-size: var(--size-24);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-header2 {
+    font-size: 22px;
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-header3 {
+    font-size: var(--size-18);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-header4 {
+    font-size: var(--size-18);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-label1 {
+    font-size: var(--size-16);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-md);
+}
+
+@utility text-label10 {
+    font-size: var(--size-14);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-label2 {
+    font-size: var(--size-14);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-label3 {
+    font-size: var(--size-14);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-label4 {
+    font-size: var(--size-12);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-label5 {
+    font-size: var(--size-12);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-label6 {
+    font-size: var(--size-14);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-label7 {
+    font-size: var(--size-16);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-md);
+}
+
+@utility text-label8 {
+    font-size: var(--size-16);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-md);
+}
+
+@utility text-label9 {
+    font-size: var(--size-14);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-subheader1 {
+    font-size: var(--size-24);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-light);
+    letter-spacing: var(--letter-spacing-none);
+}
+
+@utility text-subheader2 {
+    font-size: var(--size-18);
+    line-height: var(--line-height-md);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-sm);
+}
+
+@utility text-subheader3 {
+    font-size: var(--size-16);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-sm);
+}
