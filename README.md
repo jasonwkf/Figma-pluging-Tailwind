@@ -56,6 +56,26 @@ Watch TypeScript changes:
 npm run watch
 ```
 
+Compile the Tailwind files from a JSON export:
+
+1. Use the plugin's `Download` button and save the JSON as
+   `~/Desktop/figma-variables.json`.
+2. Run:
+
+```bash
+npm run tailwind:export
+```
+
+The generated files are written to `~/Desktop/figma-tailwind/`:
+`base.css`, `color-tokens.css`, `typography.css`, `index.css`, and
+`tailwind.config.js`.
+
+You can also provide custom paths:
+
+```bash
+npm run tailwind:export -- ./tokens.json ./dist/tailwind
+```
+
 The Figma plugin manifest points to `code.js` and `ui.html`.
 
 ## Product Notes
