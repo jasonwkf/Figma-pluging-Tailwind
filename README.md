@@ -56,24 +56,61 @@ Watch TypeScript changes:
 npm run watch
 ```
 
-Compile the Tailwind files from a JSON export:
-
-1. Use the plugin's `Download` button and save the JSON as
-   `~/Desktop/figma-variables.json`.
-2. Run:
+Compile Tailwind v4 files from the local Figma MCP bundle:
 
 ```bash
-npm run tailwind:export
+npm run tailwind:output
 ```
 
-The generated files are written to `~/Desktop/figma-tailwind/`:
-`base.css`, `color-tokens.css`, `typography.css`, `index.css`, and
-`tailwind.config.js`.
+This reads `tokens/figma-variables.json` and writes the three focused JSON files
+under `tokens/` and `base.css`, `colour-token.css`, and `typography.css` under
+`tailwind/`.
 
-You can also provide custom paths:
+Compile a separate Tailwind v3 config:
 
 ```bash
-npm run tailwind:export -- ./tokens.json ./dist/tailwind
+npm run tailwind3:output
+```
+
+This reads the same local bundle and writes only `tailwind3/tailwind.config.js`,
+a CommonJS config with the example's content pattern, nested primitive palettes,
+semantic colours, and font-family stack. Missing values, alias issues, collisions,
+and unsupported values are reported as terminal warnings.
+
+The v3 compiler uses the supported `darkMode` key and extends
+`theme.backgroundColor` so `bg-primary` can coexist with `bg-red-500` and other
+palette/semantic background utilities. Background tokens reference their own
+variables so their values can change by mode. It collapses repeated prefixes,
+including `elevation-elevation`, rather than copying that repetition from the
+example.
+
+Copy the generated config to your consuming project's root. The app supplies
+the CSS variables referenced by this config; this compiler does not emit CSS.
+In a project with `"type": "module"`, rename the
+CommonJS config to `tailwind.config.cjs`. The `content` paths are relative to the
+consuming project's working directory; update them for your app.
+
+The compiler validates every source mode, using Light (when present) or the
+collection default to select config entries. Mode-specific values are supplied
+by your application's CSS variables. This compiler exports colour and
+font-family mappings, matching the example's scope; typography composites and
+spacing configuration are not part of this v3 output.
+
+Custom input and output directory:
+
+```bash
+npm run tailwind3:output -- ./tokens/figma-variables.json ./dist/tailwind3
+```
+
+Environment overrides are `FIGMA_VARIABLES_JSON` and
+`FIGMA_TAILWIND3_OUTPUT_DIR`. The compiler reads local JSON and does not fetch
+Figma data or modify the v4 output. Refresh the token bundle through the Figma
+MCP workflow when updated design tokens are needed.
+
+Run the v3 compiler tests:
+
+```bash
+npm run test:tailwind3
 ```
 
 The Figma plugin manifest points to `code.js` and `ui.html`.
