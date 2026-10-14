@@ -17,16 +17,17 @@ The agent should prefer correctness, deterministic output, and recoverable handl
 
 For the ZB Design System workflow, refresh the source token bundle through Figma MCP before generating Tailwind output:
 
-1. Retrieve all local Figma variable collections, modes, variables, values, and aliases through Figma MCP.
+1. Use Figma MCP to retrieve fresh local variable collections, modes, variables, values, and aliases from **ZB-Design-System-Master** (file key: `pijva5QtMXOesieYY9lmEn`) before generating any Tailwind output.
 2. Retrieve large responses in bounded batches when necessary.
 3. Assemble the batches into `tokens/figma-variables.json`. The batch assembler must deduplicate variables by ID and checkpoint valid JSON after each batch.
-4. Treat `tokens/figma-variables.json` as the source of truth for local generation.
-5. Run `npm run tailwind:output` to generate the requested files:
+4. Verify that the export is complete: confirm the source file key, a fresh export timestamp, and collection and variable counts matching the Figma MCP retrieval. If MCP access fails or the export is incomplete, stop and report the problem. Do not silently use the existing JSON bundle or generate output from a partial checkpoint.
+5. Treat the verified `tokens/figma-variables.json` as the source of truth for local generation.
+6. Run `npm run tailwind:output` to generate the requested files:
 
    ```text
-   tokens/primitives.json       -> tailwind/base.css
-   tokens/colour-token.json     -> tailwind/colour-token.css
-   tokens/typography.json      -> tailwind/typography.css
+   tokens/primitives.json       -> tailwind4/base.css
+   tokens/colour-token.json     -> tailwind4/colour-token.css
+   tokens/typography.json      -> tailwind4/typography.css
    ```
 
 Figma MCP is invoked by the implementation agent. The npm command only reads the local JSON bundle and transforms it; it does not connect to Figma MCP directly.

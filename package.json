@@ -6,12 +6,11 @@
   "scripts": {
     "build:tsc": "tsc -p tsconfig.json",
     "build": "npm run build:tsc",
-    "tailwind:output": "node scripts/figmatotailwind.mjs",
+    "tailwind4:output": "node scripts/figmatotailwind.mjs",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
     "watch": "npm run build:tsc -- --watch",
-    "tailwind3:output": "node scripts/figmatotailwind3.mjs",
-    "test:tailwind3": "node --test scripts/figmatotailwind3.test.mjs"
+    "tailwind3:output": "node scripts/figmatotailwind3.mjs"
   },
   "author": "",
   "license": "",

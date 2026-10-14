@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const defaultOutputPath = path.resolve("tailwind");
+const defaultOutputPath = path.resolve("tailwind4");
 const defaultTokenPath = path.resolve("tokens/figma-variables.json");
 
 function toTokenPath(name) {
@@ -139,7 +139,7 @@ function buildTailwindFiles(bundle) {
 
   return {
     "tokens/primitives.json": JSON.stringify(primitiveBundle, null, 2),
-    "tailwind/base.css": baseCss,
+    "tailwind4/base.css": baseCss,
     ...colours,
     ...typography
   };
@@ -164,7 +164,7 @@ function buildColourTokenFiles(bundle, cssNames, variablesById, header = "") {
   const css = `${header}@theme {\n${declarations.join("\n")}\n}\n`;
   return {
     "tokens/colour-token.json": JSON.stringify(colourBundle, null, 2),
-    "tailwind/colour-token.css": css
+    "tailwind4/colour-token.css": css
   };
 }
 
@@ -223,7 +223,7 @@ function buildTypographyFiles(bundle, cssNames, variablesById, header = "") {
   const css = `${header}${utilityBlocks.join("\n\n")}\n`;
   return {
     "tokens/typography.json": JSON.stringify(typographyBundle, null, 2),
-    "tailwind/typography.css": css
+    "tailwind4/typography.css": css
   };
 }
 

@@ -64,7 +64,7 @@ npm run tailwind:output
 
 This reads `tokens/figma-variables.json` and writes the three focused JSON files
 under `tokens/` and `base.css`, `colour-token.css`, and `typography.css` under
-`tailwind/`.
+`tailwind4/`.
 
 Compile a separate Tailwind v3 config:
 
@@ -106,12 +106,6 @@ Environment overrides are `FIGMA_VARIABLES_JSON` and
 `FIGMA_TAILWIND3_OUTPUT_DIR`. The compiler reads local JSON and does not fetch
 Figma data or modify the v4 output. Refresh the token bundle through the Figma
 MCP workflow when updated design tokens are needed.
-
-Run the v3 compiler tests:
-
-```bash
-npm run test:tailwind3
-```
 
 The Figma plugin manifest points to `code.js` and `ui.html`.
 
