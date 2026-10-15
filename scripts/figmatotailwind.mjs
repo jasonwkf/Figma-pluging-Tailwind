@@ -140,9 +140,28 @@ function buildTailwindFiles(bundle) {
   return {
     "tokens/primitives.json": JSON.stringify(primitiveBundle, null, 2),
     "tailwind4/base.css": baseCss,
+    ...buildBreakpointFiles(bundle, header),
     ...colours,
     ...typography
   };
+}
+
+function buildBreakpointFiles(bundle, header = "") {
+  const widths = new Set();
+  for (const collection of bundle.collections) {
+    if (collection.name.trim().toLowerCase() !== "breakpoints") continue;
+    for (const variable of bundle.variables) {
+      if (variable.collectionId !== collection.id || toTokenPath(variable.name).at(-1) !== "page-width") continue;
+      for (const mode of collection.modes) {
+        const value = variable.valuesByMode?.[mode.id];
+        if (typeof value === "number" && Number.isFinite(value)) widths.add(value);
+      }
+    }
+  }
+  const declarations = [[390, "xs"], [768, "md"], [1200, "lg"]]
+    .filter(([width]) => widths.has(width))
+    .map(([width, name]) => `  --breakpoint-${name}: ${width}px;`);
+  return { "tailwind4/breakpoint.css": `${header}@theme {\n${declarations.join("\n")}\n}\n` };
 }
 
 function buildColourTokenFiles(bundle, cssNames, variablesById, header = "") {
@@ -161,7 +180,14 @@ function buildColourTokenFiles(bundle, cssNames, variablesById, header = "") {
     const cssValue = valueToTailwindCss(variable, value, variablesById, cssNames);
     return cssValue ? `  ${cssNames.get(variable.id)}: ${cssValue};` : null;
   }).filter(Boolean);
-  const css = `${header}@theme {\n${declarations.join("\n")}\n}\n`;
+  const modeBlocks = (collection?.modes || []).filter((mode) => mode.id !== collection.defaultModeId).map((mode) => {
+    const values = variables.map((variable) => {
+      const value = valueToTailwindCss(variable, variable.valuesByMode?.[mode.id], variablesById, cssNames);
+      return value ? `  ${cssNames.get(variable.id)}: ${value};` : null;
+    }).filter(Boolean);
+    return `[data-${collection.normalizedName}-mode="${mode.normalizedName}"] {\n${values.join("\n")}\n}`;
+  });
+  const css = `${header}@theme {\n${declarations.join("\n")}\n}\n${modeBlocks.length ? `\n${modeBlocks.join("\n\n")}\n` : ""}`;
   return {
     "tokens/colour-token.json": JSON.stringify(colourBundle, null, 2),
     "tailwind4/colour-token.css": css
@@ -218,7 +244,12 @@ function buildTypographyFiles(bundle, cssNames, variablesById, header = "") {
     const family = key.split(" ")[0];
     const [lineHeight, weight, letterSpacing] = overrides[key] || styles[family] || styles.label;
     const className = `text-${toTokenPath(name).join("").replace(/-(?=\d)/g, "").replace(/[^a-z0-9-]/g, "")}`;
-    return `@utility ${className} {\n    font-size: ${primitiveValueReference("size", value)};\n    line-height: ${primitiveValueReference("line-height", lineHeight)};\n    font-weight: ${primitiveValueReference("font-weight", weight)};\n    letter-spacing: ${primitiveValueReference("letter-spacing", letterSpacing)};\n}`;
+    const modes = collection.modes.filter((mode) => mode.id !== collection.defaultModeId).map((mode) => {
+      const modeValue = variable.valuesByMode?.[mode.id];
+      if (typeof modeValue !== "number") return null;
+      return `    [data-${collection.normalizedName}-mode="${mode.normalizedName}"] & {\n        font-size: ${primitiveValueReference("size", modeValue)};\n    }`;
+    }).filter(Boolean);
+    return `@utility ${className} {\n    font-size: ${primitiveValueReference("size", value)};\n    line-height: ${primitiveValueReference("line-height", lineHeight)};\n    font-weight: ${primitiveValueReference("font-weight", weight)};\n    letter-spacing: ${primitiveValueReference("letter-spacing", letterSpacing)};${modes.length ? `\n${modes.join("\n")}` : ""}\n}`;
   }).filter(Boolean);
   const css = `${header}${utilityBlocks.join("\n\n")}\n`;
   return {
@@ -281,6 +312,8 @@ async function main() {
   const tokenPath = path.resolve(process.argv[2] || process.env.FIGMA_VARIABLES_JSON || defaultTokenPath);
   const outputPath = path.resolve(process.env.FIGMA_OUTPUT_DIR || defaultOutputPath);
   const bundle = JSON.parse(await fs.readFile(tokenPath, "utf8"));
+  if (bundle.source?.complete === false) throw new Error("Figma export is an incomplete checkpoint; finish and verify the MCP retrieval first");
+  if (bundle.validation?.errors?.length) throw new Error("Figma export contains validation errors");
   const files = buildTailwindFiles(bundle);
   await Promise.all(Object.entries(files).map(async ([fileName, contents]) => {
     const target = path.join(path.dirname(outputPath), fileName);
@@ -294,4 +327,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   main().catch((error) => { console.error(`\nTailwind export failed: ${error.message}`); process.exitCode = 1; });
 }
 
-export { buildTailwindFiles, createTokenBundle, mergeVariableBatch, writeTokenBundleInBatches };
+export { buildBreakpointFiles, buildTailwindFiles, createTokenBundle, mergeVariableBatch, writeTokenBundleInBatches };

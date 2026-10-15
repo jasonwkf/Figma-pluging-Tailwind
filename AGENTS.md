@@ -22,7 +22,7 @@ For the ZB Design System workflow, refresh the source token bundle through Figma
 3. Assemble the batches into `tokens/figma-variables.json`. The batch assembler must deduplicate variables by ID and checkpoint valid JSON after each batch.
 4. Verify that the export is complete: confirm the source file key, a fresh export timestamp, and collection and variable counts matching the Figma MCP retrieval. If MCP access fails or the export is incomplete, stop and report the problem. Do not silently use the existing JSON bundle or generate output from a partial checkpoint.
 5. Treat the verified `tokens/figma-variables.json` as the source of truth for local generation.
-6. Run `npm run tailwind:output` to generate the requested files:
+6. Run `npm run tailwind4:output` to generate the requested files:
 
    ```text
    tokens/primitives.json       -> tailwind4/base.css

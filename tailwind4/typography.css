@@ -5,6 +5,21 @@
     line-height: var(--line-height-md);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-sm);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-20);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-24);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 28px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-36);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-16);
+    }
 }
 
 @utility text-body2 {
@@ -12,6 +27,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: 22px;
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 26px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: 34px;
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-14);
+    }
 }
 
 @utility text-button1 {
@@ -19,6 +49,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-md);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-16);
+    }
 }
 
 @utility text-button2 {
@@ -26,6 +71,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-md);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-16);
+    }
 }
 
 @utility text-button3 {
@@ -33,6 +93,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-12);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-12);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-12);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-12);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-12);
+    }
 }
 
 @utility text-button4 {
@@ -40,6 +115,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-md);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-14);
+    }
 }
 
 @utility text-display1 {
@@ -47,6 +137,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: 34px;
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: 38px;
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 38px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: 38px;
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-30);
+    }
 }
 
 @utility text-header1 {
@@ -54,6 +159,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: 26px;
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-30);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 34px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: 42px;
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: 22px;
+    }
 }
 
 @utility text-header2 {
@@ -61,6 +181,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-24);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: 28px;
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-32);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-40);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-20);
+    }
 }
 
 @utility text-header3 {
@@ -68,6 +203,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-20);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-24);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 28px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-36);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-16);
+    }
 }
 
 @utility text-header4 {
@@ -75,6 +225,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-20);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-24);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 28px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-36);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-16);
+    }
 }
 
 @utility text-label1 {
@@ -82,6 +247,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-md);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-16);
+    }
 }
 
 @utility text-label10 {
@@ -89,6 +269,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-12);
+    }
 }
 
 @utility text-label2 {
@@ -96,6 +291,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-12);
+    }
 }
 
 @utility text-label3 {
@@ -103,6 +313,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-12);
+    }
 }
 
 @utility text-label4 {
@@ -110,6 +335,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-10);
+    }
 }
 
 @utility text-label5 {
@@ -117,6 +357,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-10);
+    }
 }
 
 @utility text-label6 {
@@ -124,6 +379,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-14);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-14);
+    }
 }
 
 @utility text-label7 {
@@ -131,6 +401,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-md);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-14);
+    }
 }
 
 @utility text-label8 {
@@ -138,6 +423,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-regular);
     letter-spacing: var(--letter-spacing-md);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-14);
+    }
 }
 
 @utility text-label9 {
@@ -145,6 +445,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-16);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-12);
+    }
 }
 
 @utility text-subheader1 {
@@ -152,6 +467,21 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-light);
     letter-spacing: var(--letter-spacing-none);
+    [data-font-adjustment-mode="m"] & {
+        font-size: 26px;
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-30);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 34px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: 42px;
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: 22px;
+    }
 }
 
 @utility text-subheader2 {
@@ -159,6 +489,21 @@
     line-height: var(--line-height-md);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-sm);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-20);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: var(--size-24);
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 28px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: var(--size-36);
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-16);
+    }
 }
 
 @utility text-subheader3 {
@@ -166,4 +511,19 @@
     line-height: var(--line-height-sm);
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--letter-spacing-sm);
+    [data-font-adjustment-mode="m"] & {
+        font-size: var(--size-18);
+    }
+    [data-font-adjustment-mode="l"] & {
+        font-size: 22px;
+    }
+    [data-font-adjustment-mode="xl"] & {
+        font-size: 26px;
+    }
+    [data-font-adjustment-mode="xxl"] & {
+        font-size: 34px;
+    }
+    [data-font-adjustment-mode="s"] & {
+        font-size: var(--size-14);
+    }
 }

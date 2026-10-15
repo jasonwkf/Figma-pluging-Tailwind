@@ -2,7 +2,9 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+const defaultCopyDirectory = fileURLToPath(new URL("../../zb-ui/", import.meta.url));
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const kebab = (value) => String(value).trim().replace(/([a-z0-9])([A-Z])/g, "$1-$2")
@@ -45,6 +47,7 @@ function aliasId(value) {
 function toJsLiteral(value, depth = 0) {
   const indent = "  ".repeat(depth);
   const childIndent = `${indent}  `;
+  if (typeof value === "function") return value.toString();
   if (Array.isArray(value)) {
     return value.length ? `[\n${value.map(item => `${childIndent}${toJsLiteral(item, depth + 1)},`).join("\n")}\n${indent}]` : "[]";
   }
@@ -77,7 +80,25 @@ function literalCss(variable, value) {
   return null;
 }
 
-/** Compile the colour and family tokens used by a Tailwind v3 config. */
+function buildBreakpointScreens(bundle) {
+  const widths = new Set();
+  for (const collection of bundle.collections) {
+    if (kebab(collection.name) !== "breakpoints") continue;
+    for (const variable of bundle.variables) {
+      if (variable.collectionId !== collection.id || tokenParts(variable.name).at(-1) !== "page-width") continue;
+      for (const mode of collection.modes) {
+        const raw = variable.valuesByMode?.[mode.id];
+        const value = raw?.kind === "number" ? raw.value : raw;
+        if (typeof value === "number" && Number.isFinite(value)) widths.add(value);
+      }
+    }
+  }
+  return Object.fromEntries([[390, "xs"], [768, "md"], [1200, "lg"]]
+    .filter(([width]) => widths.has(width))
+    .map(([width, name]) => [name, `${width}px`]));
+}
+
+/** Compile the colour, family and breakpoint tokens used by a Tailwind v3 config. */
 function buildTailwind3Files(bundle, { onWarning = () => {} } = {}) {
   if (!Array.isArray(bundle.collections) || !Array.isArray(bundle.variables)) {
     throw new Error("Token bundle must contain collections and variables arrays");
@@ -171,8 +192,9 @@ function buildTailwind3Files(bundle, { onWarning = () => {} } = {}) {
       fontFamily: { sans: [...new Set(families), "Arial", "sans-serif"] },
       colors,
       // Extend backgroundColor so palette and semantic colours remain usable for bg-*.
-      extend: { backgroundColor: backgrounds }
-    }
+      extend: { backgroundColor: backgrounds, screens: buildBreakpointScreens(bundle) }
+    },
+    plugins: [function ({ addVariant }) { addVariant('no-hover', '@media (hover: none)'); }]
   };
   // Validate every source mode; the config references CSS variables supplied by the app.
   for (const variable of variables) {
@@ -180,8 +202,18 @@ function buildTailwind3Files(bundle, { onWarning = () => {} } = {}) {
     if (collection) for (const mode of collection.modes) cssValue(variable, mode.id);
   }
   return {
-    "tailwind.config.js": `// Generated from the local Figma token bundle.\nmodule.exports = ${toJsLiteral(config)};\n`
+    "tailwind.config.js": `// Generated on ${new Date().toISOString()}\nexport default ${toJsLiteral(config)};\n`
   };
+}
+
+async function copyTailwind3Config(outputDirectory, destinationDirectory = defaultCopyDirectory) {
+  const source = path.resolve(outputDirectory, "tailwind.config.js");
+  const destination = path.resolve(destinationDirectory, "tailwind.config.js");
+  if (source !== destination) {
+    await fs.mkdir(path.dirname(destination), { recursive: true });
+    await fs.copyFile(source, destination);
+  }
+  return destination;
 }
 
 async function main() {
@@ -193,12 +225,14 @@ async function main() {
   });
   await fs.mkdir(outputPath, { recursive: true });
   for (const [name, contents] of Object.entries(files)) await fs.writeFile(path.join(outputPath, name), contents, "utf8");
+  const copiedPath = await copyTailwind3Config(outputPath);
   for (const issue of warnings) console.warn(`[${issue.code}] ${issue.message} (${issue.variableId})`);
   console.log(`Generated Tailwind v3 config in ${outputPath} (${warnings.length} warnings)`);
+  console.log(`Copied Tailwind v3 config to ${copiedPath}`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch(error => { console.error(`Tailwind v3 export failed: ${error.message}`); process.exitCode = 1; });
 }
 
-export { buildTailwind3Files };
+export { buildTailwind3Files, copyTailwind3Config };

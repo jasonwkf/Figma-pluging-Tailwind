@@ -1,5 +1,5 @@
-// Generated from the local Figma token bundle.
-module.exports = {
+// Generated on 2026-10-15T05:35:53.707Z
+export default {
   content: [
     "./src/**/*.{astro,html,js,jsx,ts,tsx,vue}",
   ],
@@ -228,6 +228,14 @@ module.exports = {
         "success-secondary": "var(--color-background-success-secondary)",
         tertiary: "var(--color-background-tertiary)",
       },
+      screens: {
+        xs: "390px",
+        md: "768px",
+        lg: "1200px",
+      },
     },
   },
+  plugins: [
+    function ({ addVariant }) { addVariant('no-hover', '@media (hover: none)'); },
+  ],
 };

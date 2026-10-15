@@ -7,6 +7,12 @@ The purpose of the plugin is to help move design tokens from Figma into frontend
 1. Tailwind 4 CSS-first output.
 2. Tailwind 3 config and CSS output.
 
+## Run Figma MCP Server from AI first
+Always update the variable from figma first by using the MCP Server as we have limitation to pull the api.
+
+### Paste this to the AI:
+Refresh the variables from ZB-Design-System-Master through Figma MCP
+
 ## What It Exports
 
 ### Tailwind 4
@@ -72,8 +78,9 @@ Compile a separate Tailwind v3 config:
 npm run tailwind3:output
 ```
 
-This reads the same local bundle and writes only `tailwind3/tailwind.config.js`,
-a CommonJS config with the example's content pattern, nested primitive palettes,
+This reads the same local bundle, writes `tailwind3/tailwind.config.js`, and copies
+it to the sibling `../zb-ui/tailwind.config.js`, replacing its existing contents.
+The generated ES module config includes the example's content pattern, nested primitive palettes,
 semantic colours, and font-family stack. Missing values, alias issues, collisions,
 and unsupported values are reported as terminal warnings.
 
@@ -84,10 +91,11 @@ variables so their values can change by mode. It collapses repeated prefixes,
 including `elevation-elevation`, rather than copying that repetition from the
 example.
 
-Copy the generated config to your consuming project's root. The app supplies
+The script's `copyTailwind3Config()` function resolves the default destination
+from the script location, so it always targets `zaobao-ui/packages/zb-ui`.
+The app supplies
 the CSS variables referenced by this config; this compiler does not emit CSS.
-In a project with `"type": "module"`, rename the
-CommonJS config to `tailwind.config.cjs`. The `content` paths are relative to the
+The `content` paths are relative to the
 consuming project's working directory; update them for your app.
 
 The compiler validates every source mode, using Light (when present) or the

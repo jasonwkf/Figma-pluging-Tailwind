@@ -1,7 +1,7 @@
 {
-  "name": "my-first-pluging",
+  "name": "@SPHTech-CQ/Figma-tailwind compiler",
   "version": "1.0.0",
-  "description": "Your Figma Plugin",
+  "description": "ZB design system figma to tailwind config",
   "main": "code.js",
   "scripts": {
     "build:tsc": "tsc -p tsconfig.json",
