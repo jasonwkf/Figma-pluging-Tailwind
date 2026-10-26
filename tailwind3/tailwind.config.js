@@ -1,4 +1,4 @@
-// Generated on 2026-10-15T05:35:53.707Z
+// Generated on 2026-10-26T06:17:35.915Z
 export default {
   content: [
     "./src/**/*.{astro,html,js,jsx,ts,tsx,vue}",
