@@ -7,6 +7,12 @@ The purpose of the plugin is to help move design tokens from Figma into frontend
 1. Tailwind 4 CSS-first output.
 2. Tailwind 3 config and CSS output.
 
+## Run Figma MCP Server from AI first
+Always update the variable from figma first by using the MCP Server as we have limitation to pull the api.
+
+### Paste this to the AI:
+Refresh the variables from ZB-Design-System-Master through Figma MCP
+
 ## What It Exports
 
 ### Tailwind 4
@@ -55,6 +61,59 @@ Watch TypeScript changes:
 ```bash
 npm run watch
 ```
+
+Compile Tailwind v4 files from the local Figma MCP bundle:
+
+```bash
+npm run tailwind:output
+```
+
+This reads `tokens/figma-variables.json` and writes the three focused JSON files
+under `tokens/` and `base.css`, `colour-token.css`, and `typography.css` under
+`tailwind4/`.
+
+Compile a separate Tailwind v3 config:
+
+```bash
+npm run tailwind3:output
+```
+
+This reads the same local bundle, writes `tailwind3/tailwind.config.js`, and copies
+it to the sibling `../zb-ui/tailwind.config.js`, replacing its existing contents.
+The generated ES module config includes the example's content pattern, nested primitive palettes,
+semantic colours, and font-family stack. Missing values, alias issues, collisions,
+and unsupported values are reported as terminal warnings.
+
+The v3 compiler uses the supported `darkMode` key and extends
+`theme.backgroundColor` so `bg-primary` can coexist with `bg-red-500` and other
+palette/semantic background utilities. Background tokens reference their own
+variables so their values can change by mode. It collapses repeated prefixes,
+including `elevation-elevation`, rather than copying that repetition from the
+example.
+
+The script's `copyTailwind3Config()` function resolves the default destination
+from the script location, so it always targets `zaobao-ui/packages/zb-ui`.
+The app supplies
+the CSS variables referenced by this config; this compiler does not emit CSS.
+The `content` paths are relative to the
+consuming project's working directory; update them for your app.
+
+The compiler validates every source mode, using Light (when present) or the
+collection default to select config entries. Mode-specific values are supplied
+by your application's CSS variables. This compiler exports colour and
+font-family mappings, matching the example's scope; typography composites and
+spacing configuration are not part of this v3 output.
+
+Custom input and output directory:
+
+```bash
+npm run tailwind3:output -- ./tokens/figma-variables.json ./dist/tailwind3
+```
+
+Environment overrides are `FIGMA_VARIABLES_JSON` and
+`FIGMA_TAILWIND3_OUTPUT_DIR`. The compiler reads local JSON and does not fetch
+Figma data or modify the v4 output. Refresh the token bundle through the Figma
+MCP workflow when updated design tokens are needed.
 
 The Figma plugin manifest points to `code.js` and `ui.html`.
 

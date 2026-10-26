@@ -1,14 +1,16 @@
 {
-  "name": "my-first-pluging",
+  "name": "@SPHTech-CQ/Figma-tailwind compiler",
   "version": "1.0.0",
-  "description": "Your Figma Plugin",
+  "description": "ZB design system figma to tailwind config",
   "main": "code.js",
   "scripts": {
     "build:tsc": "tsc -p tsconfig.json",
     "build": "npm run build:tsc",
+    "tailwind4:output": "node scripts/figmatotailwind.mjs",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
-    "watch": "npm run build:tsc -- --watch"
+    "watch": "npm run build:tsc -- --watch",
+    "tailwind3:output": "node scripts/figmatotailwind3.mjs"
   },
   "author": "",
   "license": "",
