@@ -1,766 +1,209 @@
-# AGENT.md
+# AGENTS.md
 
-## Purpose
+## Purpose and scope
 
-This file instructs an implementation agent how to build and maintain a Figma plugin that exports Figma Variables into structured JSON files and transforms those files into Tailwind CSS v4-compatible output.
+Maintain the command-line pipeline that exports design tokens from Figma through MCP and generates Tailwind CSS v4 files and a Tailwind CSS v3 configuration.
 
-The plugin must:
-
-1. Read Figma Variables from local variable collections.
-2. Serialize collections, modes, variables, values, aliases, and metadata into structured JSON objects/files.
-3. Convert the exported JSON into Tailwind CSS v4 theme output.
-4. Convert all typography variables into Tailwind CSS utility classes inside `@layer utilities`.
-
-The agent should prefer correctness, deterministic output, and recoverable handling of incomplete design-token data over clever shortcuts.
-
-## Figma MCP Export Workflow
-
-For the ZB Design System workflow, refresh the source token bundle through Figma MCP before generating Tailwind output:
-
-1. Use Figma MCP to retrieve fresh local variable collections, modes, variables, values, and aliases from **ZB-Design-System-Master** (file key: `pijva5QtMXOesieYY9lmEn`) before generating any Tailwind output.
-2. Retrieve large responses in bounded batches when necessary.
-3. Assemble the batches into `tokens/figma-variables.json`. The batch assembler must deduplicate variables by ID and checkpoint valid JSON after each batch.
-4. Verify that the export is complete: confirm the source file key, a fresh export timestamp, and collection and variable counts matching the Figma MCP retrieval. If MCP access fails or the export is incomplete, stop and report the problem. Do not silently use the existing JSON bundle or generate output from a partial checkpoint.
-5. Treat the verified `tokens/figma-variables.json` as the source of truth for local generation.
-6. Run `npm run tailwind4:output` to generate the requested files:
-
-   ```text
-   tokens/primitives.json       -> tailwind4/base.css
-   tokens/colour-token.json     -> tailwind4/colour-token.css
-   tokens/typography.json      -> tailwind4/typography.css
-   ```
-
-Figma MCP is invoked by the implementation agent. The npm command only reads the local JSON bundle and transforms it; it does not connect to Figma MCP directly.
-
-The generated naming must collapse repeated segments and follow the established Tailwind structure, for example:
+The primary workflow is:
 
 ```text
-Colour/Yellow/yellow-100       -> --color-yellow-100
-Spacing/spacing-4              -> --spacing-4
-Typography/Weight/font-weight-bold -> --font-weight-bold
+ZB-Design-System-Master
+  -> Figma MCP retrieval in bounded batches
+  -> verified tokens/figma-variables.json
+  -> version-specific local compilers
+  -> tailwind4/*.css and tailwind3/tailwind.config.js
 ```
 
-The typography output must use Tailwind v4 `@utility text-*` blocks and reference primitive variables such as `var(--size-18)`, `var(--line-height-md)`, and `var(--font-weight-regular)`.
+Work on token retrieval, JSON assembly, conversion scripts, generated artifacts, and conversion tests. Existing plugin files are legacy context; change plugin runtime code, UI, manifests, or download flows only when the user explicitly requests plugin work.
 
-## Target Architecture
+Prefer correctness, deterministic naming, complete source data, and reproducible output. Keep conversion functions independent of live Figma access.
 
-Use a small pipeline with explicit boundaries:
+## Repository entry points
 
-```text
-Figma plugin main thread
-  -> reads variable collections and variables
-  -> normalizes Figma API objects into serializable token JSON
-  -> sends JSON payload to plugin UI
+| Path | Responsibility |
+| --- | --- |
+| `tokens/figma-variables.json` | Complete source bundle retrieved through Figma MCP |
+| `scripts/figmatotailwind.mjs` | Bundle assembly helpers and Tailwind v4 generation |
+| `scripts/figmatotailwind3.mjs` | Tailwind v3 configuration generation and copy step |
+| `scripts/figmatotailwind.test.mjs` | Tailwind v4 conversion tests |
+| `scripts/figmatotailwind3.test.mjs` | Tailwind v3 conversion tests |
+| `tailwind4/` | Generated Tailwind v4 CSS |
+| `tailwind3/` | Generated Tailwind v3 configuration |
 
-Plugin UI
-  -> previews export summary and validation warnings
-  -> lets the user download JSON and CSS files
-  -> optionally lets user choose modes, collections, and output naming strategy
+Use the commands defined in `package.json`. The generation commands read local JSON; they do not connect to Figma. `npm run build` builds legacy plugin TypeScript and is not the token generation command.
 
-Conversion layer
-  -> transforms token JSON into Tailwind CSS v4
-  -> resolves aliases where possible
-  -> emits unresolved aliases as CSS variable references or validation warnings
+## Required Figma MCP refresh
+
+Before generating either Tailwind version for the ZB Design System:
+
+1. Retrieve fresh local variable collections, modes, variables, values, and alias references from **ZB-Design-System-Master**, file key `pijva5QtMXOesieYY9lmEn`, through Figma MCP.
+2. Load any required Figma tool skill before calling the corresponding tool. Use bounded batches for large responses.
+3. Assemble `tokens/figma-variables.json` using `createTokenBundle`, `mergeVariableBatch`, and `writeTokenBundleInBatches` where practical. Deduplicate variables by ID and checkpoint valid JSON after each batch.
+4. Set `source.complete` to `false` during retrieval. Preserve the source file key, file name, tool (`figma-mcp`), and a fresh ISO 8601 export timestamp.
+5. Verify collection and unique variable counts against the MCP retrieval. Check collection membership, mode values, and alias targets. Record inaccessible targets and validation issues explicitly.
+6. Mark `source.complete` as `true` only after every batch is assembled and the counts and source metadata are verified. Save the verified bundle before running either compiler.
+7. If MCP access fails or retrieval is incomplete, stop and report the problem. Never substitute a stale bundle or generate from a partial checkpoint.
+
+One complete, fresh retrieval can feed both versions in the same task. Compiler maintenance and fixture tests do not require a live Figma refresh unless source-derived output is being regenerated.
+
+Both versions require this verification even if a compiler does not enforce every check itself.
+
+## Source bundle contract
+
+Preserve the existing `schemaVersion: "1.0.0"` bundle format and compatibility with the scripts:
+
+- `source`: provenance, file key, file name, export timestamp, and completeness.
+- `collections`: IDs, keys, names, normalized names, modes, default mode IDs, and variable IDs.
+- `variables`: IDs, keys, names, collection IDs, resolved types, scopes, publishing metadata, descriptions where available, and `valuesByMode`.
+- `aliases`: source variable and mode IDs plus target variable IDs.
+- `validation`: errors and warnings with relevant variable, collection, and mode IDs.
+
+The v4 compiler currently consumes raw Figma values in `valuesByMode`: numbers, strings, booleans, RGBA objects, and `{ "type": "VARIABLE_ALIAS", "id": "..." }` references. Preserve this representation. Do not replace it with typed `kind` wrappers without updating both compilers and their tests together.
+
+Keep every source collection and mode unless the user requests filtering. Focused JSON files are derived views; the complete source bundle remains the source of truth. Keep cross-collection alias targets in the complete bundle even when a focused view excludes them.
+
+## Generation commands and artifacts
+
+Run the requested version, or both when the user asks for both:
+
+```bash
+npm run tailwind4:output
+npm run tailwind3:output
 ```
 
-Recommended implementation modules:
-
-```text
-src/
-  main.ts                  # Figma plugin controller, variable API access
-  ui.tsx                   # UI shell, export controls, download actions
-  pipeline/
-    collectVariables.ts    # reads collections, modes, variables
-    normalizeTokens.ts     # maps Figma objects to JSON-safe token records
-    resolveAliases.ts      # builds alias graph and resolves references safely
-    toTailwindV4.ts        # converts normalized JSON to Tailwind v4 CSS
-    typography.ts          # typography-specific parsing and utility generation
-    validateTokens.ts      # warnings, errors, edge-case checks
-  types/
-    tokens.ts              # exported JSON data shapes
-    figma.ts               # narrowed Figma API adapter types
-  utils/
-    naming.ts              # name normalization and collision handling
-    color.ts               # RGBA to CSS color conversion
-    units.ts               # px/rem/number conversion
-```
-
-Keep Figma API reads in `main.ts` or API adapter modules. Keep pure transformation logic free of Figma globals so it can be unit-tested outside Figma.
-
-## Plugin/API Constraints
-
-Figma plugin code has two execution environments:
-
-- The plugin controller/main context can access `figma.variables`, `figma.notify`, `figma.ui.postMessage`, and document APIs.
-- The plugin UI context can render HTML, allow file downloads, and receive messages from the controller.
-
-Important constraints:
-
-- Do not call Figma plugin APIs from the UI iframe.
-- Do not use Node-only APIs such as `fs`, `path`, or process globals in plugin runtime code.
-- Download files from the UI using `Blob`, `URL.createObjectURL`, and an `<a download>` click.
-- Treat variable IDs and collection IDs as stable within a Figma file but not portable across files.
-- Variable aliases may point across collections. Preserve alias metadata even when resolved values are emitted.
-- Variable values can differ by mode. Never flatten modes silently.
-- Remote library variables may have access constraints. Start with local variables and explicitly mark unsupported remote-library behavior if not implemented.
-
-Use asynchronous Figma variable APIs if the project targets dynamic-page access:
-
-```ts
-const collections = await figma.variables.getLocalVariableCollectionsAsync();
-const variables = await figma.variables.getLocalVariablesAsync();
-```
-
-If the project is configured for current-page access and uses synchronous APIs, isolate that choice behind the collection adapter so the rest of the pipeline is unchanged.
-
-## Data Shapes
-
-Export JSON should be structured, explicit, and versioned.
-
-### Export Bundle
-
-```ts
-type TokenExportBundle = {
-  schemaVersion: "1.0.0";
-  source: {
-    tool: "figma-plugin";
-    fileKey?: string;
-    fileName?: string;
-    exportedAt: string; // ISO 8601
-  };
-  collections: TokenCollection[];
-  variables: TokenVariable[];
-  aliases: TokenAlias[];
-  validation: ValidationResult;
-};
-```
-
-### Collection
-
-```ts
-type TokenCollection = {
-  id: string;
-  key: string;
-  name: string;
-  normalizedName: string;
-  modes: TokenMode[];
-  defaultModeId: string;
-  variableIds: string[];
-};
-
-type TokenMode = {
-  id: string;
-  name: string;
-  normalizedName: string;
-};
-```
-
-### Variable
-
-```ts
-type TokenVariable = {
-  id: string;
-  key: string;
-  name: string;
-  path: string[];
-  normalizedPath: string[];
-  cssName: string;
-  collectionId: string;
-  resolvedType: "COLOR" | "FLOAT" | "STRING" | "BOOLEAN";
-  scopes: string[];
-  hiddenFromPublishing: boolean;
-  valuesByMode: Record<string, TokenModeValue>;
-  description?: string;
-};
-
-type TokenModeValue =
-  | ColorTokenValue
-  | NumberTokenValue
-  | StringTokenValue
-  | BooleanTokenValue
-  | AliasTokenValue
-  | UnsupportedTokenValue;
-
-type ColorTokenValue = {
-  kind: "color";
-  value: {
-    r: number; // 0..1
-    g: number; // 0..1
-    b: number; // 0..1
-    a: number; // 0..1
-  };
-  css: string; // rgb(), rgba(), or color-mix-compatible string
-};
-
-type NumberTokenValue = {
-  kind: "number";
-  value: number;
-  unit?: "px" | "rem" | "ms" | "percent" | "number";
-  css: string;
-};
-
-type StringTokenValue = {
-  kind: "string";
-  value: string;
-  css: string;
-};
-
-type BooleanTokenValue = {
-  kind: "boolean";
-  value: boolean;
-};
-
-type AliasTokenValue = {
-  kind: "alias";
-  aliasTo: {
-    id: string;
-    key?: string;
-    name?: string;
-    cssName?: string;
-  };
-  resolved?: Exclude<TokenModeValue, AliasTokenValue>;
-};
-
-type UnsupportedTokenValue = {
-  kind: "unsupported";
-  reason: string;
-  rawType: string;
-};
-```
-
-### Alias
-
-```ts
-type TokenAlias = {
-  fromVariableId: string;
-  fromModeId: string;
-  toVariableId: string;
-  resolved: boolean;
-  circular: boolean;
-  path: string[];
-};
-```
-
-### Validation
-
-```ts
-type ValidationResult = {
-  errors: ValidationIssue[];
-  warnings: ValidationIssue[];
-};
-
-type ValidationIssue = {
-  code: string;
-  message: string;
-  variableId?: string;
-  collectionId?: string;
-  modeId?: string;
-};
-```
-
-## JSON File Layout
-
-Emit both a complete bundle and focused files.
+Expected repository outputs:
 
 ```text
 tokens/
-  figma-tokens.json             # complete TokenExportBundle
-  collections.json              # TokenCollection[]
-  variables.json                # TokenVariable[]
-  aliases.json                  # TokenAlias[]
-  validation.json               # ValidationResult
-tailwind/
-  tokens.css                    # Tailwind v4 theme variables and utilities
-  tokens.theme.css              # optional theme-only output
-  tokens.utilities.css          # optional typography utilities only
+  figma-variables.json          # verified MCP source
+  primitives.json               # v4 primitive subset
+  colour-token.json             # v4 semantic colour subset
+  typography.json               # v4 font-adjustment subset
+tailwind4/
+  base.css                      # primitive @theme declarations
+  colour-token.css              # semantic colours and mode selectors
+  typography.css                # @utility text-* blocks
+  breakpoint.css                # @theme breakpoint declarations
+tailwind3/
+  tailwind.config.js            # ES module configuration
 ```
 
-If the plugin exports a zip, use the same paths inside the archive.
+The v3 CLI also copies its generated config to `../zb-ui/tailwind.config.js`, resolved relative to this repository through the script location, replacing that file. Inspect the destination before running the command and respect filesystem permissions. A custom v3 output directory does not disable this copy. If the destination cannot be written, report the failure and distinguish repository generation from copy completion.
 
-## Naming Rules
+The current v3 compiler emits configuration only. CSS variables referenced by that configuration must be supplied by the consuming application.
 
-Names must be deterministic, CSS-safe, and collision-aware.
+Input overrides:
 
-Figma variable names usually use slash-separated paths:
+```bash
+npm run tailwind4:output -- ./tokens/figma-variables.json
+npm run tailwind3:output -- ./tokens/figma-variables.json ./dist/tailwind3
+```
+
+Both commands support `FIGMA_VARIABLES_JSON`. V3 also supports `FIGMA_TAILWIND3_OUTPUT_DIR`. V4 supports `FIGMA_OUTPUT_DIR`, but currently uses its parent directory as the root for fixed `tokens/` and `tailwind4/` paths; inspect that behavior before selecting a custom destination.
+
+## Shared conversion rules
+
+- Normalize slash-separated names into CSS-safe kebab-case and collapse repeated path segments or prefixes.
+- Preserve meaningful numeric names, including decimal spacing steps converted to hyphenated names.
+- Detect normalized-name collisions, retain both tokens with deterministic suffixes, and report them.
+- Sort output consistently by collection, token path, and stable ID where needed.
+- Preserve aliases in JSON. Use CSS variable references when the target name is known; report missing targets, type mismatches, and cycles without infinite recursion.
+- Resolve cross-collection mode references by matching mode names where supported, with an explicit default fallback. Never treat unrelated mode IDs as interchangeable.
+- Preserve non-default source values. Report any output scope that intentionally represents only selected modes or token categories.
+- Quote and escape string values safely. Preserve transparent colours and numeric zero.
+- Preserve the established unit convention: v4 currently emits ordinary numeric dimensions in pixels, line-height primitives as percentages, and font weights as unitless values. Do not introduce a rem conversion or change units without an explicit requirement and regression coverage.
+- Do not edit generated files manually to fix compiler behavior. Change the source transformation, then regenerate from verified input.
+
+Naming examples:
 
 ```text
-Color/Brand/Primary
-Spacing/4
-Typography/Heading/H1/Font Size
+Colour/Yellow/yellow-100             -> --color-yellow-100
+Spacing/spacing-4                    -> --spacing-4
+Typography/Weight/font-weight-bold   -> --font-weight-bold
 ```
 
-Normalize names as follows:
+## Tailwind CSS v4 requirements
 
-1. Split Figma variable names on `/`.
-2. Trim whitespace from each segment.
-3. Convert each segment to kebab-case.
-4. Remove unsupported CSS custom property characters.
-5. Collapse repeated hyphens.
-6. Remove leading and trailing hyphens.
-7. Preserve meaningful numbers, such as `100`, `2xl`, `1-5`, and `0-75`.
-8. Prefix generated CSS custom properties with `--`.
-9. Detect collisions after normalization and append a deterministic suffix based on collection or variable key.
+Use `scripts/figmatotailwind.mjs` and preserve the established ZB mappings:
 
-Examples:
+- `Primitives` feeds `tokens/primitives.json` and `tailwind4/base.css`.
+- `Colours` or `Colors` feeds `tokens/colour-token.json` and `tailwind4/colour-token.css`.
+- `Font Adjustment` feeds `tokens/typography.json` and `tailwind4/typography.css`.
+- `Breakpoints` supplies recognized `page-width` values for `tailwind4/breakpoint.css`: `390 -> xs`, `768 -> md`, and `1200 -> lg`.
 
-```text
-Color/Brand/Primary        -> --color-brand-primary
-Color / Brand / Primary    -> --color-brand-primary
-Spacing/1.5                -> --spacing-1-5
-Typography/Heading/H1      -> typography-heading-h1
-```
+Emit primitive and semantic declarations inside `@theme`. Keep established primitive references such as `--size-*`, `--line-height-*`, `--font-weight-*`, and `--letter-spacing-*` even when they are not automatic Tailwind utility namespaces.
 
-Do not silently overwrite colliding tokens. Record a `NAME_COLLISION` warning and preserve both tokens with deterministic names.
-
-## Collection and Mode Handling
-
-Collections are first-class output objects. Each variable must reference its collection and provide values by mode ID.
-
-Rules:
-
-- Preserve every collection unless the user explicitly filters collections.
-- Preserve every mode unless the user explicitly filters modes.
-- Store mode IDs and normalized mode names.
-- Use the collection default mode as the default CSS output.
-- For non-default modes, emit selectors using a configurable mode strategy.
-
-Recommended mode strategies:
+Use top-level `@utility text-*` blocks for typography, preserving the existing style-family mappings and overrides. Reference primitives where available:
 
 ```css
-@theme {
-  --color-bg: #ffffff;
-}
-
-[data-theme="dark"] {
-  --color-bg: #000000;
-}
-```
-
-For multiple collections with overlapping mode names, include the collection name when needed:
-
-```css
-[data-color-mode="dark"] {
-  --color-bg: #000000;
-}
-
-[data-density-mode="compact"] {
-  --spacing-control-y: 0.375rem;
+@utility text-body1 {
+    font-size: var(--size-18);
+    line-height: var(--line-height-md);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-sm);
 }
 ```
 
-Do not merge modes from different collections unless the user chooses an explicit merge strategy.
+Preserve semantic colour mode selectors and typography mode overrides using the collection and mode normalized names. Primitive CSS currently uses the collection default mode; retain other source modes in JSON and report this limitation when relevant.
 
-## Alias Handling
+If a required primitive or typography value is unavailable, report it and avoid invalid fallback declarations. Do not silently invent design values. Keep these files importable by a consuming Tailwind v4 stylesheet without repeating framework imports in every generated file.
 
-Figma aliases are represented as values with `type: "VARIABLE_ALIAS"` and an `id` target.
+## Tailwind CSS v3 requirements
 
-The agent must:
+Use `scripts/figmatotailwind3.mjs` to emit an ES module config with `export default`. Preserve:
 
-- Preserve alias references in JSON.
-- Build an alias graph.
-- Resolve aliases per mode where possible.
-- Detect circular aliases.
-- Detect missing alias targets.
-- Avoid infinite recursion.
-- Emit CSS custom property references for aliases when appropriate.
+- `content: ["./src/**/*.{astro,html,js,jsx,ts,tsx,vue}"]`, unless the user supplies different consumer paths.
+- `darkMode: "class"` with the correct casing.
+- `theme.fontFamily.sans` using deduplicated family variable references followed by `Arial` and `sans-serif`.
+- `theme.colors` containing nested primitive palettes and semantic colour references.
+- `theme.extend.backgroundColor` containing background token references so semantic backgrounds coexist with palette `bg-*` utilities.
+- `theme.extend.screens` containing recognized breakpoint mappings.
+- The existing `no-hover` variant for `@media (hover: none)`.
 
-Example JSON value:
+Use `var(--color-...)` and `var(--family-...)` references matching the application's CSS contract. Each background token references its own variable so application mode changes can update its value.
 
-```json
-{
-  "kind": "alias",
-  "aliasTo": {
-    "id": "VariableID:123",
-    "name": "Color/Brand/Primary",
-    "cssName": "--color-brand-primary"
-  },
-  "resolved": {
-    "kind": "color",
-    "value": { "r": 0.1, "g": 0.2, "b": 0.9, "a": 1 },
-    "css": "#1a33e6"
-  }
-}
-```
+Validate every source mode. Select Light when present, otherwise the collection default, to determine config entries. Mode-specific values come from application CSS; the config does not embed separate theme values for each mode.
 
-Example CSS output:
+Current v3 scope covers colours, font families, breakpoints, and the existing variant. Typography composites and spacing configuration require an explicit scope extension. Keep v3 syntax separate from v4 `@theme` and `@utility` output.
 
-```css
-@theme {
-  --color-button-bg: var(--color-brand-primary);
-}
-```
+## Validation and testing
 
-If an alias cannot be resolved, keep `var(--known-name)` when the target name is known. Otherwise, emit a warning and skip the CSS declaration for that value.
-
-## Tailwind CSS v4 Output
-
-Tailwind CSS v4 uses CSS-first configuration through `@theme`, CSS custom properties, and layers.
-
-The generated output should be valid CSS that can be imported by the app:
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-brand-primary: #1a33e6;
-  --spacing-4: 1rem;
-  --radius-md: 0.375rem;
-}
-
-@layer utilities {
-  .type-heading-h1 {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    line-height: 1.1;
-    font-weight: 700;
-    letter-spacing: 0;
-  }
-}
-```
-
-Output rules:
-
-- Emit primitive design tokens as CSS custom properties inside `@theme`.
-- Use Tailwind-recognized namespaces where possible:
-  - `--color-*`
-  - `--font-*`
-  - `--text-*`
-  - `--spacing-*`
-  - `--radius-*`
-  - `--shadow-*`
-  - `--breakpoint-*`
-  - `--ease-*`
-  - `--animate-*`
-- Emit typography composites as utility classes inside `@layer utilities`.
-- Keep CSS declaration order deterministic: collections, variable path, mode.
-- Include generated comments only when useful for warnings or source context.
-- Do not emit invalid CSS identifiers.
-
-## Token Category Mapping
-
-Infer token category from variable path, scopes, and type.
-
-Recommended mapping:
+Before generation, check source completeness, collection membership, required mode values, aliases, collisions, and supported values. Report issues with stable codes such as:
 
 ```text
-Color/*                         -> --color-*
-Colors/*                        -> --color-*
-Spacing/*, Space/*, Gap/*       -> --spacing-*
-Radius/*, Border Radius/*       -> --radius-*
-Font/*, Font Family/*           -> --font-*
-Typography/*/Font Size          -> typography utility property
-Typography/*/Line Height        -> typography utility property
-Typography/*/Font Weight        -> typography utility property
-Typography/*/Letter Spacing     -> typography utility property
-Shadow/*                        -> --shadow-*
-Breakpoint/*                    -> --breakpoint-*
-Duration/*                      -> --duration-* or utility-local property
-Easing/*                        -> --ease-*
+MISSING_COLLECTION
+MISSING_MODE_VALUE
+UNRESOLVED_ALIAS
+CIRCULAR_ALIAS
+NAME_COLLISION
+UNSUPPORTED_TYPE
+INVALID_CSS_IDENTIFIER
+INCOMPLETE_TYPOGRAPHY_GROUP
+AMBIGUOUS_CATEGORY
+REMOTE_VARIABLE_UNSUPPORTED
 ```
 
-When the category is ambiguous, preserve the normalized full path and emit a warning:
+Block generation for incomplete retrieval or errors that would make output invalid or misleading. Warnings may allow generation when unsupported or missing values are handled conservatively and reported clearly.
 
-```css
-@theme {
-  --token-product-card-depth: 4;
-}
+For compiler changes, run the relevant fixture tests; run both suites for shared conversion changes:
+
+```bash
+node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs
 ```
 
-## Typography Variables
+Cover mode preservation, aliases and cycles, missing targets, collision handling, repeated prefixes, alpha colours including alpha zero, escaping, unit formatting, typography references, breakpoint mappings, stable ordering, and valid JSON/config syntax where relevant to the change. Test file copying with temporary destinations rather than the real consuming application.
 
-All typography variables must be converted into Tailwind CSS utilities inside `@layer utilities`.
+Do not regenerate live artifacts merely to test documentation edits. For generation tasks, inspect the resulting diff and confirm that expected files exist, references match their intended definitions, and unrelated artifacts remain untouched. Account for the v3 generated timestamp when checking deterministic content.
 
-Typography may appear as individual variables:
+## Completion criteria and reporting
 
-```text
-Typography/Heading/H1/Font Family
-Typography/Heading/H1/Font Size
-Typography/Heading/H1/Line Height
-Typography/Heading/H1/Font Weight
-Typography/Heading/H1/Letter Spacing
-Typography/Heading/H1/Text Transform
-Typography/Heading/H1/Paragraph Spacing
-```
+A generation task is complete when:
 
-Group typography variables by the shared path before the final property segment:
+1. The source bundle is fresh, complete, and verified against MCP retrieval counts.
+2. Requested version-specific files have been generated from that same verified bundle.
+3. Naming, aliases, units, and supported modes follow the contracts above.
+4. Relevant conversion tests pass when compiler code changes.
+5. The v3 copy result is verified when the v3 CLI is used.
+6. Any skipped values, warnings, unsupported categories, or mode limitations are reported.
 
-```text
-Typography/Heading/H1/Font Size
-Typography/Heading/H1/Line Height
-```
-
-becomes:
-
-```css
-@layer utilities {
-  .type-heading-h1 {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    line-height: 1.1;
-    font-weight: 700;
-    letter-spacing: 0;
-  }
-}
-```
-
-Typography utility naming:
-
-```text
-Typography/Heading/H1 -> .type-heading-h1
-Typography/Body/Small -> .type-body-small
-Typography/Label/LG   -> .type-label-lg
-```
-
-Typography property mapping:
-
-```text
-Font Family       -> font-family
-Font Size         -> font-size
-Line Height       -> line-height
-Font Weight       -> font-weight
-Letter Spacing    -> letter-spacing
-Text Case         -> text-transform
-Text Transform    -> text-transform
-Paragraph Spacing -> margin-bottom, if explicitly enabled; otherwise warn
-Paragraph Indent  -> text-indent
-```
-
-Prefer using CSS variables for typography primitives when the primitive exists:
-
-```css
-@theme {
-  --font-sans: Inter, sans-serif;
-  --text-heading-h1: 2.5rem;
-}
-
-@layer utilities {
-  .type-heading-h1 {
-    font-family: var(--font-sans);
-    font-size: var(--text-heading-h1);
-    line-height: 1.1;
-    font-weight: 700;
-  }
-}
-```
-
-If Figma exports typography values only as separate variables, synthesize the utility class from those variables. If a typography group is incomplete, emit the class with available declarations and add a validation warning.
-
-## Unit Conversion
-
-Recommended defaults:
-
-- Color RGBA values: convert to hex when alpha is `1`; convert to `rgba()` or modern `rgb(... / alpha)` when alpha is less than `1`.
-- Pixel sizes: convert to `rem` using a configurable base, default `16px`.
-- Line height:
-  - If the token is a ratio, emit the unitless value.
-  - If the token is pixels, convert to `rem`.
-  - If both font size and line height are known, optionally emit a unitless ratio rounded to 4 decimals.
-- Letter spacing:
-  - Preserve `0` as `0`.
-  - Convert pixels to `em` when font size is known, otherwise `rem`.
-- Font weight:
-  - Normalize common names: `Regular -> 400`, `Medium -> 500`, `Semibold -> 600`, `Bold -> 700`.
-- Spacing and radius:
-  - Convert px to rem by default.
-  - Preserve `0` as `0`.
-- Duration:
-  - Use `ms` unless the variable name clearly indicates seconds.
-
-Conversion examples:
-
-```text
-16px -> 1rem
-24px -> 1.5rem
-2px letter spacing with 40px font size -> 0.05em
-rgba(26, 51, 230, 1) -> #1a33e6
-rgba(26, 51, 230, 0.5) -> rgb(26 51 230 / 0.5)
-```
-
-## Conversion Example
-
-Input Figma variables:
-
-```text
-Collection: Brand
-Modes: Light, Dark
-
-Color/Brand/Primary
-  Light: { r: 0.1, g: 0.2, b: 0.9, a: 1 }
-  Dark:  { r: 0.6, g: 0.7, b: 1.0, a: 1 }
-
-Color/Button/Background
-  Light: alias(Color/Brand/Primary)
-  Dark:  alias(Color/Brand/Primary)
-
-Typography/Heading/H1/Font Family
-  Light: "Inter"
-
-Typography/Heading/H1/Font Size
-  Light: 40
-
-Typography/Heading/H1/Line Height
-  Light: 44
-
-Typography/Heading/H1/Font Weight
-  Light: 700
-```
-
-Output JSON excerpt:
-
-```json
-{
-  "schemaVersion": "1.0.0",
-  "collections": [
-    {
-      "id": "VariableCollectionId:1",
-      "key": "brand-key",
-      "name": "Brand",
-      "normalizedName": "brand",
-      "defaultModeId": "mode-light",
-      "modes": [
-        { "id": "mode-light", "name": "Light", "normalizedName": "light" },
-        { "id": "mode-dark", "name": "Dark", "normalizedName": "dark" }
-      ],
-      "variableIds": ["VariableID:1", "VariableID:2"]
-    }
-  ]
-}
-```
-
-Output CSS:
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --color-brand-primary: #1a33e6;
-  --color-button-background: var(--color-brand-primary);
-}
-
-[data-theme="dark"] {
-  --color-brand-primary: #99b3ff;
-  --color-button-background: var(--color-brand-primary);
-}
-
-@layer utilities {
-  .type-heading-h1 {
-    font-family: Inter, sans-serif;
-    font-size: 2.5rem;
-    line-height: 2.75rem;
-    font-weight: 700;
-  }
-}
-```
-
-## Validation
-
-Run validation before file generation and expose issues in the UI.
-
-Required validation checks:
-
-- `MISSING_MODE_VALUE`: variable has no value for a collection mode.
-- `UNRESOLVED_ALIAS`: alias target cannot be found.
-- `CIRCULAR_ALIAS`: alias graph loops back on itself.
-- `NAME_COLLISION`: two variables produce the same normalized CSS name.
-- `UNSUPPORTED_TYPE`: value cannot be converted to JSON or CSS.
-- `INVALID_CSS_IDENTIFIER`: generated property or class name is invalid.
-- `INCOMPLETE_TYPOGRAPHY_GROUP`: typography utility is missing expected properties.
-- `AMBIGUOUS_CATEGORY`: variable cannot be mapped confidently to a Tailwind namespace.
-- `REMOTE_VARIABLE_UNSUPPORTED`: remote/library variable is referenced but cannot be read.
-
-Errors should block CSS export only when output would be invalid or misleading. Warnings should allow export.
-
-Validation UI should show:
-
-- Number of collections exported.
-- Number of variables exported.
-- Number of aliases resolved.
-- Number of warnings and errors.
-- A downloadable validation JSON file.
-
-## Implementation Steps
-
-1. Create narrowed TypeScript types for the token JSON schema.
-2. Build a Figma variable adapter that reads local collections and local variables.
-3. Normalize collection names, modes, variable paths, and CSS names.
-4. Serialize all variables into `TokenExportBundle`.
-5. Preserve raw mode values as typed `TokenModeValue` objects.
-6. Build alias lookup tables by variable ID and mode ID.
-7. Resolve aliases recursively with circular-reference detection.
-8. Implement category inference and Tailwind namespace mapping.
-9. Implement CSS value formatting for colors, numbers, strings, booleans, aliases, and unsupported values.
-10. Implement typography grouping from variable paths.
-11. Generate `@theme` output for primitive tokens.
-12. Generate `@layer utilities` output for all typography groups.
-13. Add validation and expose warnings/errors in the UI.
-14. Add download actions for JSON, CSS, and optional zip export.
-15. Add tests for normalization, alias resolution, mode handling, typography grouping, and CSS generation.
-
-## Testing Guidance
-
-Pure pipeline modules should be unit-tested without Figma.
-
-Minimum test cases:
-
-- Exports a single color token from one collection and one mode.
-- Exports light/dark mode values without losing either mode.
-- Converts color alpha values correctly.
-- Resolves a simple alias.
-- Preserves an unresolved alias and emits a warning.
-- Detects circular aliases.
-- Normalizes names with spaces, slashes, punctuation, numbers, and duplicate names.
-- Converts spacing and radius numbers to rem.
-- Groups typography variables into one utility class.
-- Emits incomplete typography utilities with warnings.
-- Produces deterministic CSS ordering.
-- Produces valid JSON matching the schema.
-
-Add fixture-style tests with representative `TokenExportBundle` JSON objects rather than depending on live Figma documents.
-
-## Edge Cases
-
-Handle these deliberately:
-
-- Empty Figma file with no local variables.
-- Collection with zero variables.
-- Variable with values for only some modes.
-- Variable aliases target deleted or inaccessible variables.
-- Alias chains cross collections.
-- Alias chain resolves differently per mode.
-- Circular aliases across two or more variables.
-- Duplicate variable names across collections.
-- Duplicate normalized names caused by punctuation or casing differences.
-- Variables with hidden-from-publishing enabled.
-- Variables using unsupported scopes.
-- Numeric variables whose unit cannot be inferred.
-- Typography group with missing font family or line height.
-- Typography variable names that do not use the expected final property segment.
-- Color values with alpha `0`.
-- String values requiring CSS quoting.
-- Font family names with spaces.
-- User chooses only one mode from a multi-mode collection.
-- Remote variables are present but unavailable to plugin APIs.
-
-## Acceptance Criteria
-
-The implementation is complete when:
-
-- The plugin can read all local Figma variable collections.
-- The plugin exports a complete versioned JSON bundle.
-- The JSON bundle includes collections, modes, variables, aliases, and validation results.
-- The plugin can generate Tailwind CSS v4-compatible output from the JSON bundle.
-- Primitive tokens are emitted inside `@theme`.
-- All typography variables are converted into classes inside `@layer utilities`.
-- Mode-specific values are preserved and emitted with deterministic selectors.
-- Aliases are preserved in JSON and resolved or represented correctly in CSS.
-- Circular and unresolved aliases are detected.
-- Naming is deterministic and collision-aware.
-- The UI lets the user download JSON and CSS outputs.
-- Tests cover the conversion pipeline without requiring a live Figma file.
-- The generated CSS can be imported into a Tailwind v4 project.
-
-## Agent Notes
-
-Prefer small, testable pure functions. Do not bind conversion logic directly to Figma plugin globals. Keep the JSON schema stable and versioned so future plugin versions can add fields without breaking downstream consumers.
-
-When in doubt, preserve more source metadata in JSON and emit conservative CSS with validation warnings. The JSON export should be the source of truth; Tailwind CSS output should be a reproducible build artifact derived from it.
+In the final response, state which versions were generated, list the output paths, summarize validation and test results, and identify any failed or incomplete step. For instruction-only tasks, report the documentation change without invoking Figma or regenerating artifacts.
