@@ -2,9 +2,7 @@
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
-
-const defaultCopyDirectory = fileURLToPath(new URL("../../zb-ui/", import.meta.url));
+import { pathToFileURL } from "node:url";
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const kebab = (value) => String(value).trim().replace(/([a-z0-9])([A-Z])/g, "$1-$2")
@@ -206,16 +204,6 @@ function buildTailwind3Files(bundle, { onWarning = () => {} } = {}) {
   };
 }
 
-async function copyTailwind3Config(outputDirectory, destinationDirectory = defaultCopyDirectory) {
-  const source = path.resolve(outputDirectory, "tailwind.config.js");
-  const destination = path.resolve(destinationDirectory, "tailwind.config.js");
-  if (source !== destination) {
-    await fs.mkdir(path.dirname(destination), { recursive: true });
-    await fs.copyFile(source, destination);
-  }
-  return destination;
-}
-
 async function main() {
   const tokenPath = path.resolve(process.argv[2] || process.env.FIGMA_VARIABLES_JSON || "tokens/figma-variables.json");
   const outputPath = path.resolve(process.argv[3] || process.env.FIGMA_TAILWIND3_OUTPUT_DIR || "tailwind3");
@@ -225,14 +213,12 @@ async function main() {
   });
   await fs.mkdir(outputPath, { recursive: true });
   for (const [name, contents] of Object.entries(files)) await fs.writeFile(path.join(outputPath, name), contents, "utf8");
-  const copiedPath = await copyTailwind3Config(outputPath);
   for (const issue of warnings) console.warn(`[${issue.code}] ${issue.message} (${issue.variableId})`);
   console.log(`Generated Tailwind v3 config in ${outputPath} (${warnings.length} warnings)`);
-  console.log(`Copied Tailwind v3 config to ${copiedPath}`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch(error => { console.error(`Tailwind v3 export failed: ${error.message}`); process.exitCode = 1; });
 }
 
-export { buildTailwind3Files, copyTailwind3Config };
+export { buildTailwind3Files };

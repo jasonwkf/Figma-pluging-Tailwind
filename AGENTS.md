@@ -24,7 +24,7 @@ Prefer correctness, deterministic naming, complete source data, and reproducible
 | --- | --- |
 | `tokens/figma-variables.json` | Complete source bundle retrieved through Figma MCP |
 | `scripts/figmatotailwind.mjs` | Bundle assembly helpers and Tailwind v4 generation |
-| `scripts/figmatotailwind3.mjs` | Tailwind v3 configuration generation and copy step |
+| `scripts/figmatotailwind3.mjs` | Tailwind v3 configuration generation |
 | `scripts/figmatotailwind.test.mjs` | Tailwind v4 conversion tests |
 | `scripts/figmatotailwind3.test.mjs` | Tailwind v3 conversion tests |
 | `tailwind4/` | Generated Tailwind v4 CSS |
@@ -88,7 +88,7 @@ tailwind3/
   tailwind.config.js            # ES module configuration
 ```
 
-The v3 CLI also copies its generated config to `../zb-ui/tailwind.config.js`, resolved relative to this repository through the script location, replacing that file. Inspect the destination before running the command and respect filesystem permissions. A custom v3 output directory does not disable this copy. If the destination cannot be written, report the failure and distinguish repository generation from copy completion.
+The v3 CLI writes only to its output directory (default: `tailwind3/`). It does not copy the config to a consuming application.
 
 The current v3 compiler emits configuration only. CSS variables referenced by that configuration must be supplied by the consuming application.
 
@@ -191,7 +191,7 @@ For compiler changes, run the relevant fixture tests; run both suites for shared
 node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs
 ```
 
-Cover mode preservation, aliases and cycles, missing targets, collision handling, repeated prefixes, alpha colours including alpha zero, escaping, unit formatting, typography references, breakpoint mappings, stable ordering, and valid JSON/config syntax where relevant to the change. Test file copying with temporary destinations rather than the real consuming application.
+Cover mode preservation, aliases and cycles, missing targets, collision handling, repeated prefixes, alpha colours including alpha zero, escaping, unit formatting, typography references, breakpoint mappings, stable ordering, and valid JSON/config syntax where relevant to the change.
 
 Do not regenerate live artifacts merely to test documentation edits. For generation tasks, inspect the resulting diff and confirm that expected files exist, references match their intended definitions, and unrelated artifacts remain untouched. Account for the v3 generated timestamp when checking deterministic content.
 
@@ -203,7 +203,6 @@ A generation task is complete when:
 2. Requested version-specific files have been generated from that same verified bundle.
 3. Naming, aliases, units, and supported modes follow the contracts above.
 4. Relevant conversion tests pass when compiler code changes.
-5. The v3 copy result is verified when the v3 CLI is used.
-6. Any skipped values, warnings, unsupported categories, or mode limitations are reported.
+5. Any skipped values, warnings, unsupported categories, or mode limitations are reported.
 
 In the final response, state which versions were generated, list the output paths, summarize validation and test results, and identify any failed or incomplete step. For instruction-only tasks, report the documentation change without invoking Figma or regenerating artifacts.
