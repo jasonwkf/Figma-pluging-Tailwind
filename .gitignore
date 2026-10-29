@@ -2,6 +2,7 @@
 *.log
 *.log.*
 node_modules
+.env
 
 out/
 dist/
