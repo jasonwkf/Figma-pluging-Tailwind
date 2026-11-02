@@ -21,7 +21,7 @@ This repo is a **Figma plugin**: two runtimes, one build output.
 
 ## Build
 
-- TypeScript compiles to `code.js` via `npm run build` / `npm run watch`. Edit `code.ts`, not hand-edit `code.js`.
+- TypeScript compiles to `code.js` via `pnpm run build` / `pnpm run watch`. Edit `code.ts`, not hand-edit `code.js`.
 - After changing `manifest.json` or `code.ts`, rebuild before testing in Figma.
 
 ## Manifest
@@ -32,4 +32,4 @@ This repo is a **Figma plugin**: two runtimes, one build output.
 
 ## Lint
 
-- ESLint uses `@figma/eslint-plugin-figma-plugins`; keep new code consistent with existing patterns and run `npm run lint` when changing TS.
+- ESLint uses `@figma/eslint-plugin-figma-plugins`; keep new code consistent with existing patterns and run `pnpm run lint` when changing TS.

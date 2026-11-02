@@ -44,38 +44,44 @@ Variables are normalized into CSS-safe token names, converted into CSS values, a
 
 ## Development
 
-Install dependencies:
+Use pnpm 11.18.0 (pinned in `package.json`). Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 Build the plugin:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Watch TypeScript changes:
 
 ```bash
-npm run watch
+pnpm run watch
 ```
 
 Compile Tailwind v4 files from the local Figma MCP bundle:
 
 ```bash
-npm run tailwind:output
+pnpm run tailwind4:output
 ```
 
 This reads `tokens/figma-variables.json` and writes the three focused JSON files
 under `tokens/` and `base.css`, `colour-token.css`, and `typography.css` under
 `tailwind4/`.
 
+Compile both Tailwind versions in sequence:
+
+```bash
+pnpm run tailwind:output
+```
+
 Compile a separate Tailwind v3 config:
 
 ```bash
-npm run tailwind3:output
+pnpm run tailwind3:output
 ```
 
 This reads the same local bundle and writes `tailwind3/tailwind.config.js`.
@@ -104,7 +110,7 @@ spacing configuration are not part of this v3 output.
 Custom input and output directory:
 
 ```bash
-npm run tailwind3:output -- ./tokens/figma-variables.json ./dist/tailwind3
+pnpm run tailwind3:output ./tokens/figma-variables.json ./dist/tailwind3
 ```
 
 Environment overrides are `FIGMA_VARIABLES_JSON` and

@@ -18,6 +18,8 @@ Work on token retrieval, JSON assembly, conversion scripts, generated artifacts,
 
 Prefer correctness, deterministic naming, complete source data, and reproducible output. Keep conversion functions independent of live Figma access.
 
+Use `PRD.md` for product scope, output contracts, and documented implementation limitations. The requirements below remain mandatory even where the current compilers do not enforce them automatically.
+
 ## Repository entry points
 
 | Path | Responsibility |
@@ -30,7 +32,9 @@ Prefer correctness, deterministic naming, complete source data, and reproducible
 | `tailwind4/` | Generated Tailwind v4 CSS |
 | `tailwind3/` | Generated Tailwind v3 configuration |
 
-Use the commands defined in `package.json`. The generation commands read local JSON; they do not connect to Figma. `npm run build` builds legacy plugin TypeScript and is not the token generation command.
+Use the commands defined in `package.json`. The generation commands read local JSON; they do not connect to Figma. `pnpm run build` builds legacy plugin TypeScript and is not the token generation command.
+
+Use pnpm 11.18.0, pinned in `package.json`. Install dependencies with `pnpm install` and maintain `pnpm-lock.yaml`; do not introduce npm or Yarn lockfiles. Use `pnpm install --frozen-lockfile` when verifying an unchanged dependency graph.
 
 ## Required Figma MCP refresh
 
@@ -67,19 +71,22 @@ Keep every source collection and mode unless the user requests filtering. Focuse
 Run the requested version, or both when the user asks for both:
 
 ```bash
-npm run tailwind4:output
-npm run tailwind3:output
+pnpm run tailwind4:output
+pnpm run tailwind3:output
 ```
+
+For both versions, use `pnpm run tailwind:output`. It runs v4 first, then v3 only if v4 succeeds. It does not retrieve Figma data or roll back v4 artifacts if v3 fails.
 
 Expected repository outputs:
 
 ```text
 tokens/
-  figma-variables.json          # verified MCP source
+  figma-variables.json           # verified MCP source
   primitives.json               # v4 primitive subset
   colour-token.json             # v4 semantic colour subset
   typography.json               # v4 font-adjustment subset
 tailwind4/
+  index.css                     # imports all generated v4 stylesheets
   base.css                      # primitive @theme declarations
   colour-token.css              # semantic colours and mode selectors
   typography.css                # @utility text-* blocks
@@ -92,11 +99,13 @@ The v3 CLI writes only to its output directory (default: `tailwind3/`). It does 
 
 The current v3 compiler emits configuration only. CSS variables referenced by that configuration must be supplied by the consuming application.
 
+Package exports map `./tailwind4` to `tailwind4/index.css` and `./tailwind3` to `tailwind3/tailwind.config.js`. Keep these entry points aligned with generated artifacts. Do not assume v4 output supplies every CSS variable referenced by v3; verify the consuming application's contract.
+
 Input overrides:
 
 ```bash
-npm run tailwind4:output -- ./tokens/figma-variables.json
-npm run tailwind3:output -- ./tokens/figma-variables.json ./dist/tailwind3
+pnpm run tailwind4:output ./tokens/figma-variables.json
+pnpm run tailwind3:output ./tokens/figma-variables.json ./dist/tailwind3
 ```
 
 Both commands support `FIGMA_VARIABLES_JSON`. V3 also supports `FIGMA_TAILWIND3_OUTPUT_DIR`. V4 supports `FIGMA_OUTPUT_DIR`, but currently uses its parent directory as the root for fixed `tokens/` and `tailwind4/` paths; inspect that behavior before selecting a custom destination.
@@ -130,6 +139,10 @@ Use `scripts/figmatotailwind.mjs` and preserve the established ZB mappings:
 - `Colours` or `Colors` feeds `tokens/colour-token.json` and `tailwind4/colour-token.css`.
 - `Font Adjustment` feeds `tokens/typography.json` and `tailwind4/typography.css`.
 - `Breakpoints` supplies recognized `page-width` values for `tailwind4/breakpoint.css`: `390 -> xs`, `768 -> md`, and `1200 -> lg`.
+
+Generate `tailwind4/index.css` from the generated file map, importing each v4 stylesheet exactly once with a relative path and excluding the index itself. Preserve the current order: `base.css`, `breakpoint.css`, `colour-token.css`, then `typography.css`. Include new generated stylesheets automatically. The consuming application supplies its Tailwind framework setup.
+
+Typography comes from numeric variables in `Font Adjustment`, not live Figma Text Styles. Keep the established style-family mappings and per-style overrides in the compiler.
 
 Emit primitive and semantic declarations inside `@theme`. Keep established primitive references such as `--size-*`, `--line-height-*`, `--font-weight-*`, and `--letter-spacing-*` even when they are not automatic Tailwind utility namespaces.
 
@@ -168,6 +181,13 @@ Current v3 scope covers colours, font families, breakpoints, and the existing va
 
 ## Validation and testing
 
+Account for current enforcement gaps when reviewing or generating output:
+
+- V4 rejects explicit `source.complete: false` and recorded validation errors, but does not independently verify provenance or retrieval counts. V3 does not enforce these bundle-level gates. Verify the source before either command regardless of CLI behavior.
+- V4 lacks comprehensive alias, collision, and missing-value diagnostics and selects the first matching collection for each mapped category. Preserve the complete bundle and report any source collections excluded from generated views.
+- V4 typography primitive lookup currently appends `px` on a miss, which can produce invalid symbolic values. Inspect required primitive references and report missing values; do not treat this fallback as valid design data.
+- V3 warnings may omit invalid colour/family tokens without failing the CLI. Review warnings before accepting output.
+
 Before generation, check source completeness, collection membership, required mode values, aliases, collisions, and supported values. Report issues with stable codes such as:
 
 ```text
@@ -188,10 +208,12 @@ Block generation for incomplete retrieval or errors that would make output inval
 For compiler changes, run the relevant fixture tests; run both suites for shared conversion changes:
 
 ```bash
-node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs
+pnpm exec node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs
 ```
 
 Cover mode preservation, aliases and cycles, missing targets, collision handling, repeated prefixes, alpha colours including alpha zero, escaping, unit formatting, typography references, breakpoint mappings, stable ordering, and valid JSON/config syntax where relevant to the change.
+
+The current suites cover v4 index imports and breakpoint mappings in both versions. The broader cases above are required regression targets for relevant compiler changes, not a claim of existing coverage.
 
 Do not regenerate live artifacts merely to test documentation edits. For generation tasks, inspect the resulting diff and confirm that expected files exist, references match their intended definitions, and unrelated artifacts remain untouched. Account for the v3 generated timestamp when checking deterministic content.
 

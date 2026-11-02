@@ -6,15 +6,17 @@
     "./tailwind3": "./tailwind3/tailwind.config.js",
     "./tailwind4": "./tailwind4/index.css"
   },
+  "packageManager": "pnpm@11.18.0",
   "scripts": {
     "build:tsc": "tsc -p tsconfig.json",
-    "build": "npm run build:tsc",
-    "tailwind:output": "npm run tailwind4:output && npm run tailwind3:output",
+    "build": "pnpm run build:tsc",
+    "tailwind:output": "pnpm run tailwind4:output && pnpm run tailwind3:output",
     "tailwind4:output": "node scripts/figmatotailwind.mjs",
+    "tailwind3:output": "node scripts/figmatotailwind3.mjs",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
-    "watch": "npm run build:tsc -- --watch",
-    "tailwind3:output": "node scripts/figmatotailwind3.mjs"
+    "watch": "pnpm run build:tsc --watch"
+    
   },
   "author": "",
   "license": "",
