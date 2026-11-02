@@ -1,6 +1,19 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildBreakpointFiles } from "./figmatotailwind.mjs";
+import { buildBreakpointFiles, buildTailwindFiles } from "./figmatotailwind.mjs";
+
+test("index imports every generated stylesheet once with relative paths in stable order", () => {
+  const bundle = { collections: [], variables: [] };
+  const files = buildTailwindFiles(bundle);
+  const index = files["tailwind4/index.css"];
+  const imports = [...index.matchAll(/@import "(.+)";/g)].map((match) => match[1]);
+  assert.deepEqual(imports, ["./base.css", "./breakpoint.css", "./colour-token.css", "./typography.css"]);
+  assert.deepEqual(
+    imports.map((fileName) => `tailwind4/${fileName.slice(2)}`).sort(),
+    Object.keys(files).filter((fileName) => fileName.endsWith(".css") && fileName !== "tailwind4/index.css").sort()
+  );
+  assert.equal(buildTailwindFiles(bundle)["tailwind4/index.css"], index);
+});
 
 test("breakpoints use page widths across modes and ignore other sizes", () => {
   const bundle = {

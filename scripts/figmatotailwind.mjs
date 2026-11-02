@@ -137,13 +137,18 @@ function buildTailwindFiles(bundle) {
   const colours = buildColourTokenFiles(bundle, cssNames, variablesById, header);
   const typography = buildTypographyFiles(bundle, cssNames, variablesById, header);
 
-  return {
+  const files = {
     "tokens/primitives.json": JSON.stringify(primitiveBundle, null, 2),
     "tailwind4/base.css": baseCss,
     ...buildBreakpointFiles(bundle, header),
     ...colours,
     ...typography
   };
+  files["tailwind4/index.css"] = header + Object.keys(files)
+    .filter((fileName) => fileName.startsWith("tailwind4/") && fileName.endsWith(".css"))
+    .map((fileName) => `@import "./${path.posix.relative("tailwind4", fileName)}";\n`)
+    .join("");
+  return files;
 }
 
 function buildBreakpointFiles(bundle, header = "") {
