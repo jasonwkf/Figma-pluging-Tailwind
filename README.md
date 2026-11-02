@@ -78,8 +78,7 @@ Compile a separate Tailwind v3 config:
 npm run tailwind3:output
 ```
 
-This reads the same local bundle, writes `tailwind3/tailwind.config.js`, and copies
-it to the sibling `../zb-ui/tailwind.config.js`, replacing its existing contents.
+This reads the same local bundle and writes `tailwind3/tailwind.config.js`.
 The generated ES module config includes the example's content pattern, nested primitive palettes,
 semantic colours, and font-family stack. Missing values, alias issues, collisions,
 and unsupported values are reported as terminal warnings.
@@ -91,8 +90,6 @@ variables so their values can change by mode. It collapses repeated prefixes,
 including `elevation-elevation`, rather than copying that repetition from the
 example.
 
-The script's `copyTailwind3Config()` function resolves the default destination
-from the script location, so it always targets `zaobao-ui/packages/zb-ui`.
 The app supplies
 the CSS variables referenced by this config; this compiler does not emit CSS.
 The `content` paths are relative to the

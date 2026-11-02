@@ -1,11 +1,15 @@
 {
-  "name": "@SPHTech-CQ/Figma-tailwind compiler",
+  "name": "@SPHTech-CQ/figma-tailwind-compiler",
   "version": "1.0.0",
   "description": "ZB design system figma to tailwind config",
-  "main": "code.js",
+  "exports": {
+    "./tailwind3": "./tailwind3/tailwind.config.js",
+    "./tailwind4": "./tailwind4/index.css"
+  },
   "scripts": {
     "build:tsc": "tsc -p tsconfig.json",
     "build": "npm run build:tsc",
+    "tailwind:output": "npm run tailwind4:output && npm run tailwind3:output",
     "tailwind4:output": "node scripts/figmatotailwind.mjs",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
