@@ -4,8 +4,8 @@
     "tool": "figma-mcp",
     "fileKey": "MEN3cpvdA1YxUi29dHnHsc",
     "fileName": "Document",
+    "exportedAt": "2026-11-04T07:25:17.440Z",
     "complete": true,
-    "exportedAt": "2026-11-04T05:26:02.679Z",
     "retrieval": {
       "collectionCount": 5,
       "variableCount": 230,
@@ -17,7 +17,9 @@
         "VariableCollectionId:13:2595": 72
       },
       "typographyStyleCount": 17,
-      "verifiedAt": "2026-11-04T05:26:02.690Z"
+      "variableBatchCount": 7,
+      "aliasCount": 137,
+      "verifiedAt": "2026-11-04T07:27:14.366Z"
     }
   },
   "collections": [
@@ -25,6 +27,7 @@
       "id": "VariableCollectionId:1:11959",
       "key": "0e5bfbd10beaed630e00b3d63ec0a8a13456ee3d",
       "name": "Breakpoints",
+      "defaultModeId": "1:2",
       "modes": [
         {
           "id": "1:2",
@@ -37,18 +40,19 @@
           "normalizedName": "1024"
         }
       ],
-      "defaultModeId": "1:2",
       "variableIds": [
         "VariableID:1:11960",
         "VariableID:1:11961"
       ],
       "hiddenFromPublishing": false,
+      "remote": false,
       "normalizedName": "breakpoints"
     },
     {
       "id": "VariableCollectionId:13:2595",
       "key": "5483aaa665a954a22b529047284c9becfcdd83c2",
       "name": "Colour",
+      "defaultModeId": "13:0",
       "modes": [
         {
           "id": "13:0",
@@ -56,7 +60,6 @@
           "normalizedName": "mode-1"
         }
       ],
-      "defaultModeId": "13:0",
       "variableIds": [
         "VariableID:13:2596",
         "VariableID:13:2609",
@@ -132,12 +135,14 @@
         "VariableID:219:54402"
       ],
       "hiddenFromPublishing": false,
+      "remote": false,
       "normalizedName": "colour"
     },
     {
       "id": "VariableCollectionId:1:692",
       "key": "efba6d48ea4422d715490ea1e4ee5185f62cbfaf",
       "name": "Font Size",
+      "defaultModeId": "1:1",
       "modes": [
         {
           "id": "1:1",
@@ -145,7 +150,6 @@
           "normalizedName": "mode-1"
         }
       ],
-      "defaultModeId": "1:1",
       "variableIds": [
         "VariableID:1:693",
         "VariableID:1:694",
@@ -164,12 +168,14 @@
         "VariableID:1:703"
       ],
       "hiddenFromPublishing": false,
+      "remote": false,
       "normalizedName": "font-size"
     },
     {
       "id": "VariableCollectionId:1:649",
       "key": "b08323166f333caf7e4c7b347ac2731a0d2d0d59",
       "name": "Primitives",
+      "defaultModeId": "1:0",
       "modes": [
         {
           "id": "1:0",
@@ -177,7 +183,6 @@
           "normalizedName": "mode-1"
         }
       ],
-      "defaultModeId": "1:0",
       "variableIds": [
         "VariableID:13:2592",
         "VariableID:120:82472",
@@ -272,12 +277,14 @@
         "VariableID:229:55729"
       ],
       "hiddenFromPublishing": false,
+      "remote": false,
       "normalizedName": "primitives"
     },
     {
       "id": "VariableCollectionId:1:27272",
       "key": "aa84865c4cf5732b872053306f2e5469da0fd8d7",
       "name": "Size",
+      "defaultModeId": "1:4",
       "modes": [
         {
           "id": "1:4",
@@ -285,7 +292,6 @@
           "normalizedName": "mode-1"
         }
       ],
-      "defaultModeId": "1:4",
       "variableIds": [
         "VariableID:24:67197",
         "VariableID:61:74863",
@@ -339,6 +345,7 @@
         "VariableID:207:53978"
       ],
       "hiddenFromPublishing": false,
+      "remote": false,
       "normalizedName": "size"
     }
   ],
@@ -355,6 +362,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -374,6 +382,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -393,6 +402,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -412,6 +422,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -431,6 +442,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -450,6 +462,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -469,6 +482,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -488,6 +502,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -507,6 +522,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -526,6 +542,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -545,6 +562,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -564,6 +582,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -583,6 +602,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -602,6 +622,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -621,6 +642,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -640,6 +662,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -659,6 +682,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -678,6 +702,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -697,6 +722,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -716,6 +742,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -735,6 +762,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -754,6 +782,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -773,6 +802,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 18
       }
@@ -789,6 +819,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "Pinyin",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 16
       }
@@ -805,6 +836,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -824,6 +856,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -843,6 +876,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -862,6 +896,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -881,6 +916,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 100
       }
@@ -897,6 +933,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -916,6 +953,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 1
       }
@@ -932,6 +970,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 16
       }
@@ -948,6 +987,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 16
       }
@@ -964,6 +1004,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 12
       }
@@ -980,6 +1021,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -999,6 +1041,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1018,6 +1061,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1037,6 +1081,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1056,6 +1101,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1075,6 +1121,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1094,6 +1141,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1113,6 +1161,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1132,6 +1181,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1151,6 +1201,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1170,6 +1221,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1189,6 +1241,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -1208,6 +1261,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1227,6 +1281,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1246,6 +1301,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1265,6 +1321,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1284,6 +1341,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1303,6 +1361,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1322,6 +1381,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1341,6 +1401,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1360,6 +1421,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1379,6 +1441,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1398,6 +1461,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1417,6 +1481,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1436,6 +1501,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1455,6 +1521,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1474,6 +1541,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1493,6 +1561,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1512,6 +1581,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1531,6 +1601,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -1550,6 +1621,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.8509804010391235,
@@ -1571,6 +1643,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.6901960968971252,
@@ -1592,6 +1665,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -1613,6 +1687,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -1634,6 +1709,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9019607901573181,
@@ -1655,6 +1731,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -1676,6 +1753,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -1697,6 +1775,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -1718,6 +1797,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -1739,6 +1819,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -1760,6 +1841,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9098039269447327,
@@ -1781,6 +1863,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.5490196347236633,
@@ -1802,6 +1885,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.0941176488995552,
@@ -1823,6 +1907,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.07450980693101883,
@@ -1844,6 +1929,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.0470588244497776,
@@ -1865,6 +1951,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9490196108818054,
@@ -1886,6 +1973,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.1764705926179886,
@@ -1907,6 +1995,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9215686321258545,
@@ -1928,6 +2017,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.886274516582489,
@@ -1949,6 +2039,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.8352941274642944,
@@ -1970,6 +2061,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9686274528503418,
@@ -1991,6 +2083,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -2018,6 +2111,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.7686274647712708,
@@ -2039,6 +2133,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.6509804129600525,
@@ -2060,6 +2155,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.41960784792900085,
@@ -2081,6 +2177,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.32156863808631897,
@@ -2102,6 +2199,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.239215686917305,
@@ -2123,6 +2221,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -2144,6 +2243,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -2171,6 +2271,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -2198,6 +2299,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 1,
@@ -2219,6 +2321,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -2246,6 +2349,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -2273,6 +2377,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -2300,6 +2405,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9921568632125854,
@@ -2321,6 +2427,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9843137264251709,
@@ -2342,6 +2449,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9490196108818054,
@@ -2363,6 +2471,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.8549019694328308,
@@ -2384,6 +2493,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9960784316062927,
@@ -2405,6 +2515,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -2432,6 +2543,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.7607843279838562,
@@ -2453,6 +2565,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.7137255072593689,
@@ -2474,6 +2587,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.5686274766921997,
@@ -2495,6 +2609,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.4274509847164154,
@@ -2516,6 +2631,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.3333333432674408,
@@ -2537,6 +2653,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9764705896377563,
@@ -2558,6 +2675,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9607843160629272,
@@ -2579,6 +2697,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9372549057006836,
@@ -2600,6 +2719,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.6549019813537598,
@@ -2621,6 +2741,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9921568632125854,
@@ -2642,6 +2763,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.3764705955982208,
@@ -2663,6 +2785,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 1,
@@ -2684,6 +2807,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2703,6 +2827,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2722,6 +2847,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2741,6 +2867,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2760,6 +2887,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2779,6 +2907,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2798,6 +2927,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2817,6 +2947,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "Masthead logo",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2836,6 +2967,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2855,6 +2987,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2874,6 +3007,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2893,6 +3027,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2912,6 +3047,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "1. Article Media Caption Bottom Padding",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2931,6 +3067,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2950,6 +3087,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2969,6 +3107,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -2988,6 +3127,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3007,6 +3147,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3026,6 +3167,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 56
       }
@@ -3042,6 +3184,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3061,6 +3204,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3080,6 +3224,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3099,6 +3244,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3118,6 +3264,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 44
       }
@@ -3134,6 +3281,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 32
       }
@@ -3150,6 +3298,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 28
       }
@@ -3166,6 +3315,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 24
       }
@@ -3182,6 +3332,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 20
       }
@@ -3198,6 +3349,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 18
       }
@@ -3214,6 +3366,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3233,6 +3386,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3252,6 +3406,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3271,6 +3426,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3290,6 +3446,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3309,6 +3466,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3328,6 +3486,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3347,6 +3506,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3366,6 +3526,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3385,6 +3546,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3404,6 +3566,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3423,6 +3586,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3442,6 +3606,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3461,6 +3626,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3480,6 +3646,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3499,6 +3666,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3518,6 +3686,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3537,6 +3706,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3556,6 +3726,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3575,6 +3746,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3594,6 +3766,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3613,6 +3786,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3632,6 +3806,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3651,6 +3826,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3670,6 +3846,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3689,6 +3866,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3708,6 +3886,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3727,6 +3906,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3746,6 +3926,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3765,6 +3946,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 14
       }
@@ -3781,6 +3963,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 12
       }
@@ -3797,6 +3980,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:1": 10
       }
@@ -3813,6 +3997,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3832,6 +4017,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3851,6 +4037,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3870,6 +4057,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3889,6 +4077,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3908,6 +4097,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3927,6 +4117,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -3946,6 +4137,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3965,6 +4157,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -3984,6 +4177,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -4003,6 +4197,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -4022,6 +4217,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -4041,6 +4237,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:4": {
           "type": "VARIABLE_ALIAS",
@@ -4060,6 +4257,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 0
       }
@@ -4076,6 +4274,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 100
       }
@@ -4092,6 +4291,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 12
       }
@@ -4108,6 +4308,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 16
       }
@@ -4124,6 +4325,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 2
       }
@@ -4140,6 +4342,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 20
       }
@@ -4156,6 +4359,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 24
       }
@@ -4172,6 +4376,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "Avatar",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 30
       }
@@ -4188,6 +4393,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 32
       }
@@ -4204,6 +4410,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 4
       }
@@ -4220,6 +4427,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 40
       }
@@ -4236,6 +4444,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 56
       }
@@ -4252,6 +4461,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "Button elevation",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 6
       }
@@ -4268,6 +4478,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "1. Navigation Feature Tab",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 60
       }
@@ -4284,6 +4495,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 8
       }
@@ -4300,6 +4512,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 80
       }
@@ -4316,6 +4529,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 12
       }
@@ -4332,6 +4546,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 16
       }
@@ -4348,6 +4563,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 20
       }
@@ -4364,6 +4580,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 24
       }
@@ -4380,6 +4597,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "1. Button M",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 3
       }
@@ -4396,6 +4614,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "1. Button M",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 4
       }
@@ -4412,6 +4631,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "1. Button M",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 5
       }
@@ -4428,6 +4648,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 8
       }
@@ -4444,6 +4665,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -4463,6 +4685,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -4482,6 +4705,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -4501,6 +4725,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -4520,6 +4745,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -4539,6 +4765,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "13:0": {
           "type": "VARIABLE_ALIAS",
@@ -4558,6 +4785,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": "Noto Sans SC"
       }
@@ -4574,6 +4802,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -4593,6 +4822,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -4612,6 +4842,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -4631,6 +4862,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 180
       }
@@ -4647,6 +4879,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 150
       }
@@ -4663,6 +4896,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": "500"
       }
@@ -4679,6 +4913,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": "400"
       }
@@ -4695,6 +4930,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:2": 844,
         "1:3": 768
@@ -4712,6 +4948,7 @@
       "remote": false,
       "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:2": 390,
         "1:3": 1024
@@ -5437,7 +5674,7 @@
       "fileKey": "MEN3cpvdA1YxUi29dHnHsc",
       "tool": "figma-mcp",
       "nodeId": "1:26752",
-      "exportedAt": "2026-11-03T09:47:35.401Z"
+      "exportedAt": "2026-11-04T07:26:43.156Z"
     },
     "styles": [
       {
@@ -5457,12 +5694,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5479,6 +5710,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5501,12 +5738,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5523,6 +5754,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5545,12 +5782,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5567,6 +5798,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5589,12 +5826,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5611,6 +5842,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5633,12 +5870,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5655,6 +5886,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5677,12 +5914,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5699,6 +5930,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5721,12 +5958,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5743,6 +5974,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5765,12 +6002,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:229:55729"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5787,6 +6018,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:229:55729"
             }
           ]
         },
@@ -5809,12 +6046,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5831,6 +6062,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5853,12 +6090,6 @@
         },
         "paragraphIndent": 40,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:564:41880"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5875,6 +6106,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:564:41880"
             }
           ],
           "paragraphIndent": [
@@ -5903,12 +6140,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:564:41880"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5925,6 +6156,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:564:41880"
             }
           ],
           "paragraphIndent": [
@@ -5953,12 +6190,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -5975,6 +6206,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -5997,12 +6234,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -6019,6 +6250,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -6041,12 +6278,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -6063,6 +6294,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -6085,12 +6322,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -6107,6 +6338,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -6129,12 +6366,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -6151,6 +6382,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -6173,12 +6410,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -6195,6 +6426,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },

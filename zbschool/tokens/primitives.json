@@ -4,8 +4,8 @@
     "tool": "figma-mcp",
     "fileKey": "MEN3cpvdA1YxUi29dHnHsc",
     "fileName": "Document",
+    "exportedAt": "2026-11-04T07:25:17.440Z",
     "complete": true,
-    "exportedAt": "2026-11-03T09:47:35.401Z",
     "retrieval": {
       "collectionCount": 5,
       "variableCount": 230,
@@ -17,7 +17,9 @@
         "VariableCollectionId:13:2595": 72
       },
       "typographyStyleCount": 17,
-      "verifiedAt": "2026-11-03T09:47:42.168Z"
+      "variableBatchCount": 7,
+      "aliasCount": 137,
+      "verifiedAt": "2026-11-04T07:27:14.366Z"
     }
   },
   "collections": [
@@ -126,6 +128,8 @@
         "VariableID:564:41880",
         "VariableID:229:55729"
       ],
+      "hiddenFromPublishing": false,
+      "remote": false,
       "normalizedName": "primitives"
     }
   ],
@@ -139,9 +143,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -158,9 +163,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -177,9 +183,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -196,9 +203,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -215,9 +223,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 100
       }
@@ -231,9 +240,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -250,9 +260,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 1
       }
@@ -266,9 +277,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.8509804010391235,
@@ -287,9 +299,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.6901960968971252,
@@ -308,9 +321,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -329,9 +343,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -350,9 +365,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9019607901573181,
@@ -371,9 +387,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -392,9 +409,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -413,9 +431,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -434,9 +453,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -455,9 +475,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -476,9 +497,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9098039269447327,
@@ -497,9 +519,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.5490196347236633,
@@ -518,9 +541,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.0941176488995552,
@@ -539,9 +563,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.07450980693101883,
@@ -560,9 +585,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.0470588244497776,
@@ -581,9 +607,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9490196108818054,
@@ -602,9 +629,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.1764705926179886,
@@ -623,9 +651,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9215686321258545,
@@ -644,9 +673,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.886274516582489,
@@ -665,9 +695,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.8352941274642944,
@@ -686,9 +717,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9686274528503418,
@@ -707,9 +739,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -734,9 +767,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.7686274647712708,
@@ -755,9 +789,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.6509804129600525,
@@ -776,9 +811,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.41960784792900085,
@@ -797,9 +833,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.32156863808631897,
@@ -818,9 +855,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.239215686917305,
@@ -839,9 +877,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0,
@@ -860,9 +899,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -887,9 +927,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -914,9 +955,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 1,
@@ -935,9 +977,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -962,9 +1005,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -989,9 +1033,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -1016,9 +1061,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9921568632125854,
@@ -1037,9 +1083,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9843137264251709,
@@ -1058,9 +1105,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9490196108818054,
@@ -1079,9 +1127,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.8549019694328308,
@@ -1100,9 +1149,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9960784316062927,
@@ -1121,9 +1171,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "color": {
@@ -1148,9 +1199,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.7607843279838562,
@@ -1169,9 +1221,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.7137255072593689,
@@ -1190,9 +1243,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.5686274766921997,
@@ -1211,9 +1265,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.4274509847164154,
@@ -1232,9 +1287,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.3333333432674408,
@@ -1253,9 +1309,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9764705896377563,
@@ -1274,9 +1331,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9607843160629272,
@@ -1295,9 +1353,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9372549057006836,
@@ -1316,9 +1375,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.6549019813537598,
@@ -1337,9 +1397,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.9921568632125854,
@@ -1358,9 +1419,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 0.3764705955982208,
@@ -1379,9 +1441,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "r": 1,
@@ -1400,9 +1463,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 0
       }
@@ -1416,9 +1480,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 100
       }
@@ -1432,9 +1497,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 12
       }
@@ -1448,9 +1514,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 16
       }
@@ -1464,9 +1531,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 2
       }
@@ -1480,9 +1548,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 20
       }
@@ -1496,9 +1565,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 24
       }
@@ -1512,9 +1582,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "Avatar",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 30
       }
@@ -1528,9 +1599,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 32
       }
@@ -1544,9 +1616,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 4
       }
@@ -1560,9 +1633,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 40
       }
@@ -1576,9 +1650,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 56
       }
@@ -1592,9 +1667,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "Button elevation",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 6
       }
@@ -1608,9 +1684,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "1. Navigation Feature Tab",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 60
       }
@@ -1624,9 +1701,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 8
       }
@@ -1640,9 +1718,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 80
       }
@@ -1656,9 +1735,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 12
       }
@@ -1672,9 +1752,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 16
       }
@@ -1688,9 +1769,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 20
       }
@@ -1704,9 +1786,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 24
       }
@@ -1720,9 +1803,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "1. Button M",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 3
       }
@@ -1736,9 +1820,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "1. Button M",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 4
       }
@@ -1752,9 +1837,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "1. Button M",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 5
       }
@@ -1768,9 +1854,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 8
       }
@@ -1784,9 +1871,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": "Noto Sans SC"
       }
@@ -1800,9 +1888,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -1819,9 +1908,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -1838,9 +1928,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": {
           "type": "VARIABLE_ALIAS",
@@ -1857,9 +1948,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 180
       }
@@ -1873,9 +1965,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": 150
       }
@@ -1889,9 +1982,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": "500"
       }
@@ -1905,9 +1999,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:0": "400"
       }
@@ -2022,7 +2117,7 @@
       "fileKey": "MEN3cpvdA1YxUi29dHnHsc",
       "tool": "figma-mcp",
       "nodeId": "1:26752",
-      "exportedAt": "2026-11-03T09:47:35.401Z"
+      "exportedAt": "2026-11-04T07:26:43.156Z"
     },
     "styles": [
       {
@@ -2042,12 +2137,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2064,6 +2153,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2086,12 +2181,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2108,6 +2197,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2130,12 +2225,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2152,6 +2241,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2174,12 +2269,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2196,6 +2285,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2218,12 +2313,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2240,6 +2329,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2262,12 +2357,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2284,6 +2373,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2306,12 +2401,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2328,6 +2417,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2350,12 +2445,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:229:55729"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2372,6 +2461,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:229:55729"
             }
           ]
         },
@@ -2394,12 +2489,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2416,6 +2505,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2438,12 +2533,6 @@
         },
         "paragraphIndent": 40,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:564:41880"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2460,6 +2549,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:564:41880"
             }
           ],
           "paragraphIndent": [
@@ -2488,12 +2583,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:564:41880"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2510,6 +2599,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:564:41880"
             }
           ],
           "paragraphIndent": [
@@ -2538,12 +2633,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2560,6 +2649,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2582,12 +2677,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2604,6 +2693,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2626,12 +2721,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2648,6 +2737,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2670,12 +2765,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2692,6 +2781,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2714,12 +2809,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2736,6 +2825,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -2758,12 +2853,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -2780,6 +2869,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },

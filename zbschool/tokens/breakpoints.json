@@ -4,8 +4,8 @@
     "tool": "figma-mcp",
     "fileKey": "MEN3cpvdA1YxUi29dHnHsc",
     "fileName": "Document",
+    "exportedAt": "2026-11-04T07:25:17.440Z",
     "complete": true,
-    "exportedAt": "2026-11-03T09:47:35.401Z",
     "retrieval": {
       "collectionCount": 5,
       "variableCount": 230,
@@ -17,7 +17,9 @@
         "VariableCollectionId:13:2595": 72
       },
       "typographyStyleCount": 17,
-      "verifiedAt": "2026-11-03T09:47:42.168Z"
+      "variableBatchCount": 7,
+      "aliasCount": 137,
+      "verifiedAt": "2026-11-04T07:27:14.366Z"
     }
   },
   "collections": [
@@ -42,6 +44,8 @@
         "VariableID:1:11960",
         "VariableID:1:11961"
       ],
+      "hiddenFromPublishing": false,
+      "remote": false,
       "normalizedName": "breakpoints"
     }
   ],
@@ -55,9 +59,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:2": 844,
         "1:3": 768
@@ -72,9 +77,10 @@
       "scopes": [
         "ALL_SCOPES"
       ],
-      "hiddenFromPublishing": false,
       "remote": false,
+      "hiddenFromPublishing": false,
       "description": "",
+      "codeSyntax": {},
       "valuesByMode": {
         "1:2": 390,
         "1:3": 1024
@@ -107,7 +113,7 @@
       "fileKey": "MEN3cpvdA1YxUi29dHnHsc",
       "tool": "figma-mcp",
       "nodeId": "1:26752",
-      "exportedAt": "2026-11-03T09:47:35.401Z"
+      "exportedAt": "2026-11-04T07:26:43.156Z"
     },
     "styles": [
       {
@@ -127,12 +133,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -149,6 +149,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -171,12 +177,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -193,6 +193,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -215,12 +221,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -237,6 +237,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -259,12 +265,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -281,6 +281,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -303,12 +309,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -325,6 +325,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -347,12 +353,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -369,6 +369,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -391,12 +397,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -413,6 +413,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -435,12 +441,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:229:55729"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -457,6 +457,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:229:55729"
             }
           ]
         },
@@ -479,12 +485,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -501,6 +501,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -523,12 +529,6 @@
         },
         "paragraphIndent": 40,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:564:41880"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -545,6 +545,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:564:41880"
             }
           ],
           "paragraphIndent": [
@@ -573,12 +579,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:564:41880"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -595,6 +595,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:564:41880"
             }
           ],
           "paragraphIndent": [
@@ -623,12 +629,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -645,6 +645,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -667,12 +673,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -689,6 +689,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -711,12 +717,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -733,6 +733,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -755,12 +761,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -777,6 +777,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -799,12 +805,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -821,6 +821,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
@@ -843,12 +849,6 @@
         },
         "paragraphIndent": 0,
         "boundVariables": {
-          "letterSpacing": [
-            {
-              "type": "VARIABLE_ALIAS",
-              "id": "VariableID:1:704"
-            }
-          ],
           "fontSize": [
             {
               "type": "VARIABLE_ALIAS",
@@ -865,6 +865,12 @@
             {
               "type": "VARIABLE_ALIAS",
               "id": "VariableID:1:683"
+            }
+          ],
+          "letterSpacing": [
+            {
+              "type": "VARIABLE_ALIAS",
+              "id": "VariableID:1:704"
             }
           ]
         },
