@@ -1,230 +1,271 @@
-# AGENTS.md
+# AGENTS.md — zaobao-theme
 
 ## Purpose and scope
 
-Maintain the command-line pipeline that exports design tokens from Figma through MCP and generates Tailwind CSS v4 files and a Tailwind CSS v3 configuration.
-
-The primary workflow is:
+Maintain `zaobao-theme`, the command-line design-token pipeline for multiple
+Zaobao products and Figma files. Read `PRD.md` for product profiles, source
+inventory, output contracts and implementation limitations.
 
 ```text
-ZB-Design-System-Master
-  -> Figma MCP retrieval in bounded batches
-  -> verified tokens/figma-variables.json
-  -> version-specific local compilers
-  -> tailwind4/*.css and tailwind3/tailwind.config.js
+Identified product + required Figma file(s)
+  -> bounded MCP retrieval per source
+  -> complete verified source bundles
+  -> product-specific mappings and local compilers
+  -> isolated Tailwind artifacts under dist/
 ```
 
-Work on token retrieval, JSON assembly, conversion scripts, generated artifacts, and conversion tests. Existing plugin files are legacy context; change plugin runtime code, UI, manifests, or download flows only when the user explicitly requests plugin work.
+Work on retrieval, JSON assembly, conversion scripts, generated artifacts and
+conversion tests. Existing plugin files are legacy context. Change plugin
+runtime, UI, manifests or download flows only when explicitly requested.
 
-Prefer correctness, deterministic naming, complete source data, and reproducible output. Keep conversion functions independent of live Figma access.
+`zaobao-theme` is the product name. The current package name remains
+`@SPHTech-CQ/figma-tailwind-compiler`. Do not infer authorization to rename the
+package, repository, existing commands or public imports from the product name.
 
-Use `PRD.md` for product scope, output contracts, and documented implementation limitations. The requirements below remain mandatory even where the current compilers do not enforce them automatically.
+## Identify the product before acting
 
-## Repository entry points
+| Product profile | Source file key | Source bundle | Supported versions |
+| --- | --- | --- | --- |
+| `zb-master` | `pijva5QtMXOesieYY9lmEn` | `tokens/figma-variables.json` | v4, v3 |
+| `zbschool` | `MEN3cpvdA1YxUi29dHnHsc` | `zbschool/tokens/figma-variables.json` | v4 |
+
+Use the user's Figma link, requested product and repository context to identify
+scope. Never default a new product to Master or apply School rules globally.
+Ask only if an unresolved choice affects the source or output contract.
+
+For each new product/source, document the stable product slug, source identifier,
+file key, source paths, required collections/modes, typography specimen nodes,
+output mappings, naming/units, breakpoints, mode fallback, commands, exports and
+tests in `PRD.md`. Implement and verify the adapter before claiming support.
+Current scripts do not provide a universal profile registry or multi-file CLI.
+
+For new sources, prefer `<product>/tokens/<source-id>/figma-variables.json`;
+keep existing locations compatible. Keep each Figma file's complete bundle
+separate. Identity across files is `(fileKey, variableId)`, not variable ID or
+normalized name alone. Collection/mode identities are also source-specific.
+
+Do not concatenate file bundles, silently override overlapping tokens, or resolve
+remote dependencies by name. Multi-file composition requires explicit ownership,
+precedence and dependency rules plus implementation and tests. Record inaccessible
+remote targets and block output that would be invalid or misleading.
+
+## Repository entry points and commands
 
 | Path | Responsibility |
 | --- | --- |
-| `tokens/figma-variables.json` | Complete source bundle retrieved through Figma MCP |
-| `scripts/figmatotailwind.mjs` | Bundle assembly helpers and Tailwind v4 generation |
-| `scripts/figmatotailwind3.mjs` | Tailwind v3 configuration generation |
-| `scripts/figmatotailwind.test.mjs` | Tailwind v4 conversion tests |
-| `scripts/figmatotailwind3.test.mjs` | Tailwind v3 conversion tests |
-| `tailwind4/` | Generated Tailwind v4 CSS |
-| `tailwind3/` | Generated Tailwind v3 configuration |
+| `PRD.md` | Shared requirements and product-specific contracts |
+| `scripts/figmatotailwind.mjs` | Bundle assembly helpers and Master v4 compiler |
+| `scripts/figmatotailwind3.mjs` | Master v3 compiler |
+| `scripts/zbschool.mjs` | School bundle validation and v4 compiler |
+| `scripts/figmatotailwind.test.mjs` | Master v4 fixtures |
+| `scripts/figmatotailwind3.test.mjs` | Master v3 fixtures |
+| `scripts/zbschool.test.mjs` | School fixtures and CLI paths |
+| `scripts/outputPaths.test.mjs` | Master CLI output paths and exports |
 
-Use the commands defined in `package.json`. The generation commands read local JSON; they do not connect to Figma. `pnpm run build` builds legacy plugin TypeScript and is not the token generation command.
+Use pnpm 11.18.0, pinned in `package.json`, and maintain `pnpm-lock.yaml`.
+Install with `pnpm install`; use `pnpm install --frozen-lockfile` to verify an
+unchanged dependency graph. Do not introduce npm or Yarn lockfiles.
 
-Use pnpm 11.18.0, pinned in `package.json`. Install dependencies with `pnpm install` and maintain `pnpm-lock.yaml`; do not introduce npm or Yarn lockfiles. Use `pnpm install --frozen-lockfile` when verifying an unchanged dependency graph.
-
-## Required Figma MCP refresh
-
-Before generating either Tailwind version for the ZB Design System:
-
-1. Retrieve fresh local variable collections, modes, variables, values, and alias references from **ZB-Design-System-Master**, file key `pijva5QtMXOesieYY9lmEn`, through Figma MCP.
-2. Load any required Figma tool skill before calling the corresponding tool. Use bounded batches for large responses.
-3. Assemble `tokens/figma-variables.json` using `createTokenBundle`, `mergeVariableBatch`, and `writeTokenBundleInBatches` where practical. Deduplicate variables by ID and checkpoint valid JSON after each batch.
-4. Set `source.complete` to `false` during retrieval. Preserve the source file key, file name, tool (`figma-mcp`), and a fresh ISO 8601 export timestamp.
-5. Verify collection and unique variable counts against the MCP retrieval. Check collection membership, mode values, and alias targets. Record inaccessible targets and validation issues explicitly.
-6. Mark `source.complete` as `true` only after every batch is assembled and the counts and source metadata are verified. Save the verified bundle before running either compiler.
-7. If MCP access fails or retrieval is incomplete, stop and report the problem. Never substitute a stale bundle or generate from a partial checkpoint.
-
-One complete, fresh retrieval can feed both versions in the same task. Compiler maintenance and fixture tests do not require a live Figma refresh unless source-derived output is being regenerated.
-
-Both versions require this verification even if a compiler does not enforce every check itself.
-
-## Source bundle contract
-
-Preserve the existing `schemaVersion: "1.0.0"` bundle format and compatibility with the scripts:
-
-- `source`: provenance, file key, file name, export timestamp, and completeness.
-- `collections`: IDs, keys, names, normalized names, modes, default mode IDs, and variable IDs.
-- `variables`: IDs, keys, names, collection IDs, resolved types, scopes, publishing metadata, descriptions where available, and `valuesByMode`.
-- `aliases`: source variable and mode IDs plus target variable IDs.
-- `validation`: errors and warnings with relevant variable, collection, and mode IDs.
-
-The v4 compiler currently consumes raw Figma values in `valuesByMode`: numbers, strings, booleans, RGBA objects, and `{ "type": "VARIABLE_ALIAS", "id": "..." }` references. Preserve this representation. Do not replace it with typed `kind` wrappers without updating both compilers and their tests together.
-
-Keep every source collection and mode unless the user requests filtering. Focused JSON files are derived views; the complete source bundle remains the source of truth. Keep cross-collection alias targets in the complete bundle even when a focused view excludes them.
-
-## Generation commands and artifacts
-
-Run the requested version, or both when the user asks for both:
+Run commands from the repository root:
 
 ```bash
-pnpm run tailwind4:output
-pnpm run tailwind3:output
+pnpm run tailwind4:output  # Master v4
+pnpm run tailwind3:output  # Master v3
+pnpm run tailwind:output   # Master v4, then v3 on success
+pnpm run zbschool:output   # School v4
 ```
 
-For both versions, use `pnpm run tailwind:output`. It runs v4 first, then v3 only if v4 succeeds. It does not retrieve Figma data or roll back v4 artifacts if v3 fails.
+These commands read local JSON and do not retrieve Figma data. `tailwind:output`
+does not include School or roll back v4 if v3 fails. `pnpm run build` and `watch`
+build legacy plugin TypeScript; they are not theme generation commands.
 
-Expected repository outputs:
+## Mandatory refresh before generation
 
-```text
-tokens/
-  figma-variables.json           # verified MCP source
-  primitives.json               # v4 primitive subset
-  colour-token.json             # v4 semantic colour subset
-  typography.json               # v4 font-adjustment subset
-tailwind4/
-  index.css                     # imports all generated v4 stylesheets
-  base.css                      # primitive @theme declarations
-  colour-token.css              # semantic colours and mode selectors
-  typography.css                # @utility text-* blocks
-  breakpoint.css                # @theme breakpoint declarations
-tailwind3/
-  tailwind.config.js            # ES module configuration
-```
+Apply this workflow to the actual product's required sources, not a fixed default
+file. Compiler maintenance and fixture tests do not require live Figma unless
+source-derived artifacts are being regenerated.
 
-The v3 CLI writes only to its output directory (default: `tailwind3/`). It does not copy the config to a consuming application.
+1. Load the required Figma tool skills before calling the corresponding tools.
+2. Retrieve fresh local collections, modes, variables, raw values and aliases
+   through Figma MCP in bounded batches for every required source file. Refresh
+   typography specimen snapshots used by that product as well.
+3. Use `createTokenBundle`, `mergeVariableBatch` and `writeTokenBundleInBatches`
+   where practical. Deduplicate by variable ID within each file and checkpoint
+   valid JSON after each batch.
+4. Set `source.complete: false` during retrieval. Preserve file key, actual
+   reported file name, `tool: "figma-mcp"` and a fresh ISO 8601 export timestamp.
+5. Verify collection and unique variable counts, full membership, mode values,
+   alias targets and specimen coverage against MCP. Record inaccessible targets,
+   errors and warnings with relevant IDs. Store collection/variable counts,
+   per-collection counts, specimen counts where applicable and `verifiedAt` in
+   `source.retrieval`. Do not use historical counts as proof of completeness.
+6. Mark `source.complete: true` only after every batch and validation succeeds.
+   Save the verified source before running any requested compiler.
+7. If MCP access fails or retrieval is incomplete, stop and report the failed
+   step. Never substitute stale input or generate from a partial checkpoint.
 
-The current v3 compiler emits configuration only. CSS variables referenced by that configuration must be supplied by the consuming application.
+One complete fresh retrieval may feed both versions in the same task. Verify
+sources regardless of gaps in individual compiler enforcement.
 
-Package exports map `./tailwind4` to `tailwind4/index.css` and `./tailwind3` to `tailwind3/tailwind.config.js`. Keep these entry points aligned with generated artifacts. Do not assume v4 output supplies every CSS variable referenced by v3; verify the consuming application's contract.
+## Source bundle rules
 
-Input overrides:
+Preserve `schemaVersion: "1.0.0"` and existing `source`, `collections`,
+`variables`, `aliases` and `validation` fields as defined in `PRD.md`.
+Keep IDs, keys, names, normalized names, default mode IDs, membership, types,
+scopes, publishing metadata, descriptions where available and `valuesByMode`.
+
+Preserve raw numbers, strings, booleans, RGBA objects and VARIABLE_ALIAS objects.
+School's nested `{ color, opacity }` values remain raw; inventory nested aliases
+with `valuePath`. Do not introduce typed wrappers without changing all affected
+compilers and tests together.
+
+Keep every source collection and mode unless filtering is explicitly requested.
+Focused views are derived data; the complete bundle remains the source of truth.
+Keep cross-collection targets even when a subset excludes them. Product-specific
+extensions such as School's `typography` snapshot must preserve their own source
+provenance, node IDs, bindings and retrieval evidence.
+
+## Output paths and isolation
+
+| Product/output | Current destination |
+| --- | --- |
+| Master v4 CSS | `dist/tailwind4/{index,base,breakpoint,colour-token,typography}.css` |
+| Master derived JSON | `dist/tokens/{primitives,colour-token,typography}.json` |
+| Master v3 config | `dist/tailwind3/tailwind.config.js` |
+| School v4 CSS | `dist/zbschool/{index,base,breakpoint,colour-token,typography,size}.css` |
+| School JSON | `zbschool/tokens/{figma-variables,primitives,colour-token,typography,breakpoints,size}.json` |
+
+Keep package exports aligned: `./tailwind4` -> `dist/tailwind4/index.css`,
+`./tailwind3` -> `dist/tailwind3/tailwind.config.js`,
+`./zbschool/tailwind4` -> `dist/zbschool/index.css`.
+New products should prefer CSS in `dist/<product>/` and optional v3 config in
+`dist/<product>/tailwind3/`. Do not migrate existing Master paths implicitly.
+Do not delete or rewrite another product's output during targeted generation.
+
+Input overrides and their precedence are documented in `PRD.md`:
+
+- Master: positional input, then `FIGMA_VARIABLES_JSON`. V3 output uses a second
+  positional path, then `FIGMA_TAILWIND3_OUTPUT_DIR`.
+- Master v4: `FIGMA_OUTPUT_DIR` defaults to `dist/tailwind4`, but its parent is
+  the root for fixed `tokens/` and `tailwind4/` paths. Inspect before overriding.
+- School: positional input, then `ZBSCHOOL_VARIABLES_JSON`; second positional
+  CSS directory, then `ZBSCHOOL_OUTPUT_DIR`. CSS defaults to `dist/zbschool`
+  directly, with no `tailwind4/` child. JSON stays in `zbschool/tokens/`.
+
+Do not manually edit generated files to fix conversion behavior. Change the
+transformation and regenerate only after the required refresh. Do not regenerate
+live artifacts to test documentation or path changes; use isolated fixtures.
+
+## Shared conversion requirements
+
+- Normalize slash paths into CSS-safe kebab-case, collapsing repeated segments
+  and prefixes. Preserve numeric names, including decimal steps as hyphenated names.
+- Detect normalized-name collisions, keep both tokens with deterministic suffixes
+  and report them. Sort consistently by collection, path and stable identity.
+- Preserve JSON aliases; emit CSS references when target names, units and modes
+  permit. Report missing targets, type mismatches and cycles without recursion loops.
+- Resolve cross-collection modes by normalized name with the product's explicit
+  fallback. Never treat unrelated mode IDs as interchangeable.
+- Preserve non-default values and report selected-mode/category output scope.
+- Escape strings safely. Preserve transparent colours, alpha zero and numeric zero.
+- Preserve established units: ordinary dimensions in px, line-height primitives
+  in percent, weights unitless, School opacity in percent, durations/delays in ms.
+  Do not introduce rem conversion without an explicit requirement and regressions.
+- Do not invent missing design values or borrow them from another product.
+- Derive v4 index imports from the generated stylesheet map, each once, excluding
+  index itself. Preserve base, breakpoint, colour-token, typography, then additional
+  stylesheets. Use relative imports and leave framework setup to the consumer.
+
+## Product-specific requirements
+
+Use the complete mappings in `PRD.md`; these distinctions are mandatory.
+
+### ZB Master
+
+- Primitives -> `base.css`; Colours/Colors -> `colour-token.css`;
+  Font Adjustment -> `typography.css`; Breakpoints -> `breakpoint.css`.
+- Keep primitive and semantic declarations inside `@theme`. Primitive CSS uses
+  the collection default mode; retain other source modes in JSON and report scope.
+- Typography uses numeric Font Adjustment variables, existing style-family
+  mappings and overrides, and top-level `@utility text-*`. Reference size,
+  line-height, weight and letter-spacing primitives. Keep semantic and typography
+  mode overrides. Report missing primitives and reject invalid symbolic fallbacks.
+- Breakpoints: actual page widths `390 -> xs`, `768 -> md`, `1200 -> lg`.
+- V3 emits ES module `export default`, the established content glob, `darkMode:
+  "class"`, deduplicated sans family references plus Arial/sans-serif, nested
+  palettes and semantic colours, each background token's own variable under
+  `extend.backgroundColor`, recognized screens and the no-hover media variant.
+- Validate every v3 mode. Select Light when present, otherwise the default, for
+  entries; application CSS provides mode values. V3 scope is colours, families,
+  breakpoints and the variant. Spacing/composite typography need explicit scope.
+  Verify consumer CSS references; v4 does not guarantee the entire v3 contract.
+
+### ZB School
+
+- Map Primitives, Colour, Font Size, Size and Breakpoints independently of Master.
+  Mapped collections use `@theme static` and collection/mode attribute overrides.
+- Every non-opacity Size token starts `--spacing-*`, including radii, border
+  widths, elevation, icons and dimensions. Keep the normalized path, including
+  `-br-`. Opacity retains `--opacity-*`. JSON keeps original names and aliases.
+- Breakpoints: `390 -> xs`, `768 -> md`, `1024 -> lg`, `1200 -> xl`; other positive
+  widths become `width-<number>`. Use actual page widths, not mode labels.
+- Cross-collection aliases match mode names, then target defaults. Resolve foreign
+  non-default modes or unit-changing numeric aliases in the receiving context.
+- Resolve nested colour/opacity values per mode, preserving zero alpha. Report
+  that runtime opacity changes alone do not recompute composed colours.
+- Composite typography comes from applied specimens under node `1:26752` with
+  traceable properties/bindings and verified coverage. Applied values override
+  annotations; report discrepancies. Do not reuse Master's typography mappings.
+- Missing/invalid snapshots block composites; absent snapshots yield size-only
+  utilities and `INCOMPLETE_TYPOGRAPHY_GROUP`. Extra collections stay in the bundle
+  and warn `UNSUPPORTED_CATEGORY`. School currently supports v4 only.
+
+## Validation and tests
+
+Before generation, check completeness, provenance/counts, membership, every
+required mode, aliases/cycles, collisions, supported values and required typography.
+Block errors that would make output invalid or misleading. Warnings may permit
+conservative omissions only when explicitly reported.
+
+Use stable codes including `MISSING_COLLECTION`, `MISSING_MODE_VALUE`,
+`UNRESOLVED_ALIAS`, `CIRCULAR_ALIAS`, `NAME_COLLISION`, `UNSUPPORTED_TYPE`,
+`INVALID_CSS_IDENTIFIER`, `INCOMPLETE_TYPOGRAPHY_GROUP`, `AMBIGUOUS_CATEGORY` and
+`REMOTE_VARIABLE_UNSUPPORTED`. Include source and relevant token IDs.
+
+Account for current enforcement gaps: Master v4 does not prove provenance/counts,
+selects first matching categories and lacks comprehensive diagnostics; its missing
+primitive fallback can emit invalid symbolic px values. Master v3 lacks bundle
+completeness gates and may omit invalid tokens with warnings. School's stronger
+local validation still does not prove a live refresh. Inspect outputs accordingly.
+
+Run relevant fixture suites for compiler changes; run all affected product/version
+suites for shared changes:
 
 ```bash
-pnpm run tailwind4:output ./tokens/figma-variables.json
-pnpm run tailwind3:output ./tokens/figma-variables.json ./dist/tailwind3
+pnpm exec node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs scripts/zbschool.test.mjs scripts/outputPaths.test.mjs
 ```
 
-Both commands support `FIGMA_VARIABLES_JSON`. V3 also supports `FIGMA_TAILWIND3_OUTPUT_DIR`. V4 supports `FIGMA_OUTPUT_DIR`, but currently uses its parent directory as the root for fixed `tokens/` and `tailwind4/` paths; inspect that behavior before selecting a custom destination.
+Add regressions relevant to the change: mode preservation/matching, aliases and
+cycles, missing targets, collisions, repeated prefixes, decimal names, alpha zero,
+escaping, units, typography references, breakpoint mappings, deterministic ordering,
+valid JSON/config syntax, output isolation and package entry paths. Account for
+v3's generated timestamp. Do not claim coverage beyond what was tested.
 
-## Shared conversion rules
+For generation, inspect the resulting diff, expected files, imports and CSS
+references against actual definitions. Confirm unrelated products remain untouched.
 
-- Normalize slash-separated names into CSS-safe kebab-case and collapse repeated path segments or prefixes.
-- Preserve meaningful numeric names, including decimal spacing steps converted to hyphenated names.
-- Detect normalized-name collisions, retain both tokens with deterministic suffixes, and report them.
-- Sort output consistently by collection, token path, and stable ID where needed.
-- Preserve aliases in JSON. Use CSS variable references when the target name is known; report missing targets, type mismatches, and cycles without infinite recursion.
-- Resolve cross-collection mode references by matching mode names where supported, with an explicit default fallback. Never treat unrelated mode IDs as interchangeable.
-- Preserve non-default source values. Report any output scope that intentionally represents only selected modes or token categories.
-- Quote and escape string values safely. Preserve transparent colours and numeric zero.
-- Preserve the established unit convention: v4 currently emits ordinary numeric dimensions in pixels, line-height primitives as percentages, and font weights as unitless values. Do not introduce a rem conversion or change units without an explicit requirement and regression coverage.
-- Do not edit generated files manually to fix compiler behavior. Change the source transformation, then regenerate from verified input.
+## Completion and reporting
 
-Naming examples:
+Generation is complete only when all required sources are fresh, complete and
+verified; requested version artifacts follow the product contract; references and
+modes are checked; relevant tests pass for code changes; and omissions, warnings
+and limitations are reported.
 
-```text
-Colour/Yellow/yellow-100             -> --color-yellow-100
-Spacing/spacing-4                    -> --spacing-4
-Typography/Weight/font-weight-bold   -> --font-weight-bold
-```
+In the final response, state the product, source keys, versions generated, output
+paths, validation/test results and any incomplete step. For documentation-only
+work, report the documentation change without Figma retrieval or regeneration.
 
-## Tailwind CSS v4 requirements
-
-Use `scripts/figmatotailwind.mjs` and preserve the established ZB mappings:
-
-- `Primitives` feeds `tokens/primitives.json` and `tailwind4/base.css`.
-- `Colours` or `Colors` feeds `tokens/colour-token.json` and `tailwind4/colour-token.css`.
-- `Font Adjustment` feeds `tokens/typography.json` and `tailwind4/typography.css`.
-- `Breakpoints` supplies recognized `page-width` values for `tailwind4/breakpoint.css`: `390 -> xs`, `768 -> md`, and `1200 -> lg`.
-
-Generate `tailwind4/index.css` from the generated file map, importing each v4 stylesheet exactly once with a relative path and excluding the index itself. Preserve the current order: `base.css`, `breakpoint.css`, `colour-token.css`, then `typography.css`. Include new generated stylesheets automatically. The consuming application supplies its Tailwind framework setup.
-
-Typography comes from numeric variables in `Font Adjustment`, not live Figma Text Styles. Keep the established style-family mappings and per-style overrides in the compiler.
-
-Emit primitive and semantic declarations inside `@theme`. Keep established primitive references such as `--size-*`, `--line-height-*`, `--font-weight-*`, and `--letter-spacing-*` even when they are not automatic Tailwind utility namespaces.
-
-Use top-level `@utility text-*` blocks for typography, preserving the existing style-family mappings and overrides. Reference primitives where available:
-
-```css
-@utility text-body1 {
-    font-size: var(--size-18);
-    line-height: var(--line-height-md);
-    font-weight: var(--font-weight-regular);
-    letter-spacing: var(--letter-spacing-sm);
-}
-```
-
-Preserve semantic colour mode selectors and typography mode overrides using the collection and mode normalized names. Primitive CSS currently uses the collection default mode; retain other source modes in JSON and report this limitation when relevant.
-
-If a required primitive or typography value is unavailable, report it and avoid invalid fallback declarations. Do not silently invent design values. Keep these files importable by a consuming Tailwind v4 stylesheet without repeating framework imports in every generated file.
-
-## Tailwind CSS v3 requirements
-
-Use `scripts/figmatotailwind3.mjs` to emit an ES module config with `export default`. Preserve:
-
-- `content: ["./src/**/*.{astro,html,js,jsx,ts,tsx,vue}"]`, unless the user supplies different consumer paths.
-- `darkMode: "class"` with the correct casing.
-- `theme.fontFamily.sans` using deduplicated family variable references followed by `Arial` and `sans-serif`.
-- `theme.colors` containing nested primitive palettes and semantic colour references.
-- `theme.extend.backgroundColor` containing background token references so semantic backgrounds coexist with palette `bg-*` utilities.
-- `theme.extend.screens` containing recognized breakpoint mappings.
-- The existing `no-hover` variant for `@media (hover: none)`.
-
-Use `var(--color-...)` and `var(--family-...)` references matching the application's CSS contract. Each background token references its own variable so application mode changes can update its value.
-
-Validate every source mode. Select Light when present, otherwise the collection default, to determine config entries. Mode-specific values come from application CSS; the config does not embed separate theme values for each mode.
-
-Current v3 scope covers colours, font families, breakpoints, and the existing variant. Typography composites and spacing configuration require an explicit scope extension. Keep v3 syntax separate from v4 `@theme` and `@utility` output.
-
-## Validation and testing
-
-Account for current enforcement gaps when reviewing or generating output:
-
-- V4 rejects explicit `source.complete: false` and recorded validation errors, but does not independently verify provenance or retrieval counts. V3 does not enforce these bundle-level gates. Verify the source before either command regardless of CLI behavior.
-- V4 lacks comprehensive alias, collision, and missing-value diagnostics and selects the first matching collection for each mapped category. Preserve the complete bundle and report any source collections excluded from generated views.
-- V4 typography primitive lookup currently appends `px` on a miss, which can produce invalid symbolic values. Inspect required primitive references and report missing values; do not treat this fallback as valid design data.
-- V3 warnings may omit invalid colour/family tokens without failing the CLI. Review warnings before accepting output.
-
-Before generation, check source completeness, collection membership, required mode values, aliases, collisions, and supported values. Report issues with stable codes such as:
-
-```text
-MISSING_COLLECTION
-MISSING_MODE_VALUE
-UNRESOLVED_ALIAS
-CIRCULAR_ALIAS
-NAME_COLLISION
-UNSUPPORTED_TYPE
-INVALID_CSS_IDENTIFIER
-INCOMPLETE_TYPOGRAPHY_GROUP
-AMBIGUOUS_CATEGORY
-REMOTE_VARIABLE_UNSUPPORTED
-```
-
-Block generation for incomplete retrieval or errors that would make output invalid or misleading. Warnings may allow generation when unsupported or missing values are handled conservatively and reported clearly.
-
-For compiler changes, run the relevant fixture tests; run both suites for shared conversion changes:
-
-```bash
-pnpm exec node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs
-```
-
-Cover mode preservation, aliases and cycles, missing targets, collision handling, repeated prefixes, alpha colours including alpha zero, escaping, unit formatting, typography references, breakpoint mappings, stable ordering, and valid JSON/config syntax where relevant to the change.
-
-The current suites cover v4 index imports and breakpoint mappings in both versions. The broader cases above are required regression targets for relevant compiler changes, not a claim of existing coverage.
-
-Do not regenerate live artifacts merely to test documentation edits. For generation tasks, inspect the resulting diff and confirm that expected files exist, references match their intended definitions, and unrelated artifacts remain untouched. Account for the v3 generated timestamp when checking deterministic content.
-
-## Completion criteria and reporting
-
-A generation task is complete when:
-
-1. The source bundle is fresh, complete, and verified against MCP retrieval counts.
-2. Requested version-specific files have been generated from that same verified bundle.
-3. Naming, aliases, units, and supported modes follow the contracts above.
-4. Relevant conversion tests pass when compiler code changes.
-5. Any skipped values, warnings, unsupported categories, or mode limitations are reported.
-
-In the final response, state which versions were generated, list the output paths, summarize validation and test results, and identify any failed or incomplete step. For instruction-only tasks, report the documentation change without invoking Figma or regenerating artifacts.
+<!-- postman-cli:installation:start -->
+Postman CLI is installed on this device and can be used for API Engineering work.
+It is not on PATH; run it as /Users/jasonwkf/.local/bin/postman.
+<!-- postman-cli:installation:end -->

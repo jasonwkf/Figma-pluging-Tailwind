@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "ZB design system figma to tailwind config",
   "exports": {
-    "./tailwind3": "./tailwind3/tailwind.config.js",
-    "./tailwind4": "./tailwind4/index.css"
+    "./tailwind3": "./dist/tailwind3/tailwind.config.js",
+    "./tailwind4": "./dist/tailwind4/index.css",
+    "./zbschool/tailwind4": "./dist/zbschool/index.css"
   },
   "packageManager": "pnpm@11.18.0",
   "scripts": {
@@ -13,10 +14,10 @@
     "tailwind:output": "pnpm run tailwind4:output && pnpm run tailwind3:output",
     "tailwind4:output": "node scripts/figmatotailwind.mjs",
     "tailwind3:output": "node scripts/figmatotailwind3.mjs",
+    "zbschool:output": "node scripts/zbschool.mjs",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
     "watch": "pnpm run build:tsc --watch"
-    
   },
   "author": "",
   "license": "",

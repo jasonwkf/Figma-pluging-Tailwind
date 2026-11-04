@@ -4,7 +4,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const defaultOutputPath = path.resolve("tailwind4");
+// 将 CSS 与派生 JSON 统一写入 dist，源数据仍从 tokens 读取。
+const defaultOutputPath = path.resolve("dist/tailwind4");
 const defaultTokenPath = path.resolve("tokens/figma-variables.json");
 
 function toTokenPath(name) {
