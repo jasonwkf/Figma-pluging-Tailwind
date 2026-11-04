@@ -206,7 +206,8 @@ function buildTailwind3Files(bundle, { onWarning = () => {} } = {}) {
 
 async function main() {
   const tokenPath = path.resolve(process.argv[2] || process.env.FIGMA_VARIABLES_JSON || "tokens/figma-variables.json");
-  const outputPath = path.resolve(process.argv[3] || process.env.FIGMA_TAILWIND3_OUTPUT_DIR || "tailwind3");
+  // 与 v4 共用 dist 产物目录，同时保留调用方指定输出位置的能力。
+  const outputPath = path.resolve(process.argv[3] || process.env.FIGMA_TAILWIND3_OUTPUT_DIR || "dist/tailwind3");
   const warnings = [];
   const files = buildTailwind3Files(JSON.parse(await fs.readFile(tokenPath, "utf8")), {
     onWarning: issue => warnings.push(issue)
