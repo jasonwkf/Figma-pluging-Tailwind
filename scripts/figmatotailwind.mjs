@@ -4,9 +4,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-// 将 CSS 与派生 JSON 统一写入 dist，源数据仍从 tokens 读取。
-const defaultOutputPath = path.resolve("dist/tailwind4");
-const defaultTokenPath = path.resolve("tokens/figma-variables.json");
+// 将 CSS 与派生 JSON 统一写入 dist，源数据从 variables 读取。
+const defaultOutputPath = path.resolve("dist/zb/tailwind4");
+const defaultTokenPath = path.resolve("variables/figma-zb.json");
 
 function toTokenPath(name) {
   return String(name || "unnamed").split("/").map((segment) => segment.trim()
@@ -113,7 +113,7 @@ function buildTailwindFiles(bundle) {
   for (const variable of [...variables].sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))) {
     cssNames.set(variable.id, makeUniqueName(cssName(variable), variable, usedNames));
   }
-  const header = "/* Generated from tokens/figma-variables.json via Figma MCP */\n\n";
+  const header = "/* Generated from variables/figma-zb.json via Figma MCP */\n\n";
   const primitiveCollection = collections.find((collection) => collection.name.toLowerCase() === "primitives");
   const primitiveVariables = primitiveCollection ? variables.filter((variable) => variable.collectionId === primitiveCollection.id) : [];
   const primitiveBundle = {
@@ -322,11 +322,15 @@ async function main() {
   if (bundle.validation?.errors?.length) throw new Error("Figma export contains validation errors");
   const files = buildTailwindFiles(bundle);
   await Promise.all(Object.entries(files).map(async ([fileName, contents]) => {
-    const target = path.join(path.dirname(outputPath), fileName);
+    // ZB 的 CSS 与派生 token 分别归入 zb/tailwind4 和 zb/tokens。
+    const relative = fileName.startsWith("tokens/")
+      ? path.join("zb/tokens", path.posix.basename(fileName))
+      : path.join("zb", fileName);
+    const target = path.join(path.dirname(path.dirname(outputPath)), relative);
     await fs.mkdir(path.dirname(target), { recursive: true });
     await fs.writeFile(target, contents, "utf8");
   }));
-  console.log(`Processed ${bundle.variables.length} variables from ${tokenPath} into Tailwind files under ${path.dirname(outputPath)}`);
+  console.log(`Processed ${bundle.variables.length} variables from ${tokenPath} into Tailwind files under ${path.dirname(path.dirname(outputPath))}`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

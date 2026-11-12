@@ -26,8 +26,8 @@ package, repository, existing commands or public imports from the product name.
 
 | Product profile | Source file key | Source bundle | Supported versions |
 | --- | --- | --- | --- |
-| `zb-master` | `pijva5QtMXOesieYY9lmEn` | `tokens/figma-variables.json` | v4, v3 |
-| `zbschool` | `MEN3cpvdA1YxUi29dHnHsc` | `zbschool/tokens/figma-variables.json` | v4 |
+| `zb-master` | `pijva5QtMXOesieYY9lmEn` | `variables/figma-zb.json` | v4, v3 |
+| `zbschool` | `MEN3cpvdA1YxUi29dHnHsc` | `variables/figma-zbschools.json` | v4 |
 
 Use the user's Figma link, requested product and repository context to identify
 scope. Never default a new product to Master or apply School rules globally.
@@ -39,8 +39,9 @@ output mappings, naming/units, breakpoints, mode fallback, commands, exports and
 tests in `PRD.md`. Implement and verify the adapter before claiming support.
 Current scripts do not provide a universal profile registry or multi-file CLI.
 
-For new sources, prefer `<product>/tokens/<source-id>/figma-variables.json`;
-keep existing locations compatible. Keep each Figma file's complete bundle
+For new sources, prefer `variables/figma-<product>-<source-id>.json`;
+Master uses `variables/figma-zb.json` and School uses
+`variables/figma-zbschools.json`. Keep each Figma file's complete bundle
 separate. Identity across files is `(fileKey, variableId)`, not variable ID or
 normalized name alone. Collection/mode identities are also source-specific.
 
@@ -129,25 +130,25 @@ provenance, node IDs, bindings and retrieval evidence.
 
 | Product/output | Current destination |
 | --- | --- |
-| Master v4 CSS | `dist/tailwind4/{index,base,breakpoint,colour-token,typography}.css` |
-| Master derived JSON | `dist/tokens/{primitives,colour-token,typography}.json` |
-| Master v3 config | `dist/tailwind3/tailwind.config.js` |
+| Master v4 CSS | `dist/zb/tailwind4/{index,base,breakpoint,colour-token,typography}.css` |
+| Master derived JSON | `dist/zb/tokens/{primitives,colour-token,typography}.json` |
+| Master v3 config | `dist/zb/tailwind3/tailwind.config.js` |
 | School v4 CSS | `dist/zbschool/{index,base,breakpoint,colour-token,typography,size}.css` |
 | School JSON | `zbschool/tokens/{figma-variables,primitives,colour-token,typography,breakpoints,size}.json` |
 
-Keep package exports aligned: `./tailwind4` -> `dist/tailwind4/index.css`,
-`./tailwind3` -> `dist/tailwind3/tailwind.config.js`,
+Keep package exports aligned: `./tailwind4` -> `dist/zb/tailwind4/index.css`,
+`./tailwind3` -> `dist/zb/tailwind3/tailwind.config.js`,
 `./zbschool/tailwind4` -> `dist/zbschool/index.css`.
 New products should prefer CSS in `dist/<product>/` and optional v3 config in
-`dist/<product>/tailwind3/`. Do not migrate existing Master paths implicitly.
+`dist/<product>/tailwind3/`. Master uses version subdirectories under `dist/zb/`.
 Do not delete or rewrite another product's output during targeted generation.
 
 Input overrides and their precedence are documented in `PRD.md`:
 
 - Master: positional input, then `FIGMA_VARIABLES_JSON`. V3 output uses a second
   positional path, then `FIGMA_TAILWIND3_OUTPUT_DIR`.
-- Master v4: `FIGMA_OUTPUT_DIR` defaults to `dist/tailwind4`, but its parent is
-  the root for fixed `tokens/` and `tailwind4/` paths. Inspect before overriding.
+- Master v4: `FIGMA_OUTPUT_DIR` selects the CSS directory directly and defaults
+  to `dist/zb/tailwind4`. Derived JSON stays in `dist/zb/tokens/`.
 - School: positional input, then `ZBSCHOOL_VARIABLES_JSON`; second positional
   CSS directory, then `ZBSCHOOL_OUTPUT_DIR`. CSS defaults to `dist/zbschool`
   directly, with no `tailwind4/` child. JSON stays in `zbschool/tokens/`.
@@ -197,7 +198,10 @@ Use the complete mappings in `PRD.md`; these distinctions are mandatory.
   `extend.backgroundColor`, recognized screens and the no-hover media variant.
 - Validate every v3 mode. Select Light when present, otherwise the default, for
   entries; application CSS provides mode values. V3 scope is colours, families,
-  breakpoints and the variant. Spacing/composite typography need explicit scope.
+  breakpoints, composite typography and the variant. Composite typography uses
+  literal tuples under `extend.fontSize` for the selected Font Adjustment mode,
+  reports `TYPOGRAPHY_MODE_SCOPE`, and does not switch at runtime. V3 Body 1 uses
+  `line-height-sm` (150%); keep v4 mappings independent. Spacing needs explicit scope.
   Verify consumer CSS references; v4 does not guarantee the entire v3 contract.
 
 ### ZB School

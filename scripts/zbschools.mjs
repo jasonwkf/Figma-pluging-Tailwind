@@ -320,21 +320,24 @@ export function buildSchoolFiles(bundle) {
 }
 
 async function main() {
-  const input = path.resolve(process.argv[2] || process.env.ZBSCHOOL_VARIABLES_JSON || "zbschool/tokens/figma-variables.json");
-  const cssRoot = path.resolve(process.argv[3] || process.env.ZBSCHOOL_OUTPUT_DIR || "dist/zbschool");
-  const tokenRoot = path.resolve("zbschool");
+  // School 源文件统一存放在 variables，生成 token 仍写入 dist。
+  const input = path.resolve(process.argv[2] || process.env.ZBSCHOOLS_VARIABLES_JSON || "variables/figma-zbschools.json");
+  // ZBSchools 的 CSS 统一输出到产品目录下的 tailwind4 子目录。
+  const cssRoot = path.resolve(process.argv[3] || process.env.ZBSCHOOLS_OUTPUT_DIR || "dist/zbschools/tailwind4");
+  // ZBSchools 的生成 token 归入 dist/zbschools/tokens，避免覆盖输入源文件。
+  const tokenRoot = path.resolve("dist/zbschools/tokens");
   const bundle = JSON.parse(await fs.readFile(input, "utf8"));
   const files = buildSchoolFiles(bundle);
   // Build and validate everything before writing any output.
   for (const [relative, content] of Object.entries(files)) {
     const target = relative.startsWith("tailwind4/")
       ? path.join(cssRoot, path.posix.basename(relative))
-      : path.join(tokenRoot, relative);
+      : path.join(tokenRoot, path.posix.basename(relative));
     await fs.mkdir(path.dirname(target), { recursive: true });
     await fs.writeFile(target, content, "utf8");
   }
   for (const warning of validateSchoolBundle(bundle).warnings) console.warn(`${warning.code}: ${warning.message || warning.emittedName}`);
-  console.log(`Generated ${Object.keys(files).length} files from ${bundle.variables.length} School variables; CSS: ${cssRoot}; JSON: ${path.join(tokenRoot, "tokens")}`);
+  console.log(`Generated ${Object.keys(files).length} files from ${bundle.variables.length} School variables; CSS: ${cssRoot}; JSON: ${tokenRoot}`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

@@ -3,18 +3,18 @@
   "version": "1.0.0",
   "description": "ZB design system figma to tailwind config",
   "exports": {
-    "./tailwind3": "./dist/tailwind3/tailwind.config.js",
-    "./tailwind4": "./dist/tailwind4/index.css",
-    "./zbschool/tailwind4": "./dist/zbschool/index.css"
+    "./zb/tailwind3": "./dist/zb/tailwind3/tailwind.config.js",
+    "./zb/tailwind4": "./dist/zb/tailwind4/index.css",
+    "./zbschools/tailwind4": "./dist/zbschools/tailwind4/index.css"
   },
   "packageManager": "pnpm@11.18.0",
   "scripts": {
     "build:tsc": "tsc -p tsconfig.json",
-    "build": "pnpm run build:tsc",
-    "tailwind:output": "pnpm run tailwind4:output && pnpm run tailwind3:output",
-    "tailwind4:output": "node scripts/figmatotailwind.mjs",
-    "tailwind3:output": "node scripts/figmatotailwind3.mjs",
-    "zbschool:output": "node scripts/zbschool.mjs",
+    "build:plugin": "pnpm run build:tsc",
+    "build": "pnpm run zb:tailwind4 && pnpm run zb:tailwind3 && pnpm run zbschools:tailwind4",
+    "zb:tailwind4": "node scripts/figmatotailwind.mjs",
+    "zb:tailwind3": "node scripts/figmatotailwind3.mjs",
+    "zbschools:tailwind4": "pnpm exec node scripts/zbschools.mjs",
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
     "watch": "pnpm run build:tsc --watch"

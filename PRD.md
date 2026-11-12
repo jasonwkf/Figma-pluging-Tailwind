@@ -21,7 +21,7 @@ Product + identified Figma source file(s)
 ```
 
 The product name is `zaobao-theme`. The current npm package remains
-`@SPHTech-CQ/figma-tailwind-compiler`; renaming the package, repository or public
+`@SPHTech-CQ/zaobao-theme`; renaming the package, repository or public
 imports is a separate migration. This document does not introduce a new CLI.
 
 ## Goals and boundaries
@@ -36,8 +36,7 @@ imports is a separate migration. This document does not introduce a new CLI.
 
 Legacy plugin runtime, UI, manifests and download flows are outside the theme
 pipeline. Automatic Figma synchronization, application installation, publishing,
-and new output formats require explicit scope. V3 typography composites and
-spacing configuration are not currently supported. A universal product registry,
+and new output formats require explicit scope. V3 spacing configuration is not currently supported. A universal product registry,
 multi-file compiler and shared profile engine are future work, not existing APIs.
 
 ## Product profiles and source inventory
@@ -48,7 +47,7 @@ they are not arguments accepted by a generic command.
 | Profile | Figma source | Supported output | Compiler |
 | --- | --- | --- | --- |
 | `zb-master` | ZB-Design-System-Master: `pijva5QtMXOesieYY9lmEn` | Tailwind v4 and v3 | `figmatotailwind.mjs`, `figmatotailwind3.mjs` |
-| `zbschool` | ZBSchools-Design-System: `MEN3cpvdA1YxUi29dHnHsc` | Tailwind v4 | `zbschool.mjs` |
+| `zbschools` | ZBSchools-Design-System: `MEN3cpvdA1YxUi29dHnHsc` | Tailwind v4 | `zbschools.mjs` |
 
 Display labels may differ from the file name returned by MCP. Preserve the actual
 reported name in source metadata; School has previously returned `Document`.
@@ -67,8 +66,8 @@ Every new product/source needs a documented profile containing:
 ### Multiple files within one product
 
 Keep a separate complete bundle per Figma file. New sources should use
-`<product>/tokens/<source-id>/figma-variables.json`; preserve the existing Master
-and School locations for compatibility. Derived views must not replace sources.
+`variables/figma-<product>-<source-id>.json`; use `variables/figma-zb.json` for Master and
+`variables/figma-zbschools.json` for School. Derived views must not replace sources.
 
 Do not concatenate bundles or deduplicate across files by variable ID alone.
 Cross-file identity is `(fileKey, variableId)`; collection and mode identities
@@ -127,40 +126,41 @@ unchanged dependency graph with `pnpm install --frozen-lockfile`.
 
 | Command | Input default | CSS/config destination | Derived JSON |
 | --- | --- | --- | --- |
-| `pnpm run tailwind4:output` | `tokens/figma-variables.json` | `dist/tailwind4/` | `dist/tokens/` |
-| `pnpm run tailwind3:output` | `tokens/figma-variables.json` | `dist/tailwind3/tailwind.config.js` | None |
-| `pnpm run zbschool:output` | `zbschool/tokens/figma-variables.json` | `dist/zbschool/` | `zbschool/tokens/` |
+| `pnpm run zb:tailwind4` | `variables/figma-zb.json` | `dist/zb/tailwind4/` | `dist/zb/tokens/` |
+| `pnpm run zb:tailwind3` | `variables/figma-zb.json` | `dist/zb/tailwind3/tailwind.config.js` | None |
+| `pnpm run zbschools:tailwind4` | `variables/figma-zbschools.json` | `dist/zbschools/tailwind4/` | `dist/zbschools/tokens/` |
 
-`pnpm run tailwind:output` runs Master v4 then v3. It does not generate School,
-retrieve Figma data or roll back v4 if v3 fails. `pnpm run build` and `watch` build
+`pnpm run build` runs Master v4, Master v3, then School v4, stopping on failure.
+It does not retrieve Figma data or roll back previously generated files. `pnpm run build:plugin` and `watch` build
 legacy plugin TypeScript, not themes. Run commands from the repository root.
 
 Positional input paths take precedence over environment overrides:
 
 ```bash
-pnpm run tailwind4:output ./tokens/figma-variables.json
-pnpm run tailwind3:output ./tokens/figma-variables.json ./dist/tailwind3
-pnpm run zbschool:output ./zbschool/tokens/figma-variables.json ./dist/zbschool
+pnpm run zb:tailwind4 ./variables/figma-zb.json
+pnpm run zb:tailwind3 ./variables/figma-zb.json ./dist/zb/tailwind3
+pnpm run zbschools:tailwind4 ./variables/figma-zbschools.json ./dist/zbschools/tailwind4
 ```
 
 - Master scripts accept `FIGMA_VARIABLES_JSON`.
 - Master v3 accepts a second positional output directory, then
-  `FIGMA_TAILWIND3_OUTPUT_DIR`, defaulting to `dist/tailwind3/`.
-- Master v4 accepts `FIGMA_OUTPUT_DIR`, defaulting to `dist/tailwind4/`. Its parent
-  is the root for fixed `tokens/` and `tailwind4/` paths. It is not an arbitrary
+  `FIGMA_TAILWIND3_OUTPUT_DIR`, defaulting to `dist/zb/tailwind3/`.
+- Master v4 accepts `FIGMA_OUTPUT_DIR`, defaulting to `dist/zb/tailwind4/`. Its grandparent
+  is the root for fixed `zb/tokens/` and `zb/tailwind4/` paths. It is not an arbitrary
   CSS destination override.
-- School accepts `ZBSCHOOL_VARIABLES_JSON` and a second positional CSS directory,
-  then `ZBSCHOOL_OUTPUT_DIR`, defaulting to `dist/zbschool/`. CSS is written
-  directly there; JSON remains in `zbschool/tokens/` relative to the working directory.
+- School accepts `ZBSCHOOLS_VARIABLES_JSON` and a second positional CSS directory,
+  then `ZBSCHOOLS_OUTPUT_DIR`, defaulting to `dist/zbschools/tailwind4/`. CSS is written
+  directly there; JSON remains in `dist/zbschools/tokens/` relative to the working directory.
 
-For new products, prefer v4 CSS directly under `dist/<product>/`, with any v3
+For new products, prefer v4 CSS under `dist/<product>/tailwind4/`, with any v3
 config under `dist/<product>/tailwind3/`. This is an onboarding convention, not a
-change to existing Master paths. Existing files under `zbschool/tailwind4/` are
+change to existing Master paths. Existing files under `zbschools/tailwind4/` are
 legacy artifacts and are not the current School CLI destination.
 
-Current package subpaths are `./tailwind4`, `./tailwind3` and
-`./zbschool/tailwind4`, pointing respectively to `dist/tailwind4/index.css`,
-`dist/tailwind3/tailwind.config.js` and `dist/zbschool/index.css`.
+Recommended package subpaths are `./zb/tailwind4`, `./zb/tailwind3` and
+`./zbschools/tailwind4`, pointing respectively to `dist/zb/tailwind4/index.css`,
+`dist/zb/tailwind3/tailwind.config.js` and `dist/zbschools/tailwind4/index.css`.
+The legacy `./tailwind4` and `./tailwind3` subpaths remain aliases for compatibility.
 
 ## Shared conversion and consumer requirements
 
@@ -195,7 +195,7 @@ consumer composition contract.
 
 ### ZB Master
 
-| Collection | JSON filename under `dist/tokens/` | CSS filename under `dist/tailwind4/` |
+| Collection | JSON filename under `dist/zb/tokens/` | CSS filename under `dist/zb/tailwind4/` |
 | --- | --- | --- |
 | Primitives | `primitives.json` | `base.css` |
 | Colours / Colors | `colour-token.json` | `colour-token.css` |
@@ -221,6 +221,8 @@ Master v3 emits an ES module with `export default`, preserving:
 - Nested primitive palettes and semantic references in `theme.colors`.
 - Each background token's own variable in `theme.extend.backgroundColor`.
 - Recognized breakpoints in `theme.extend.screens`.
+- Composite typography tuples in `theme.extend.fontSize`, built by
+  `buildTypographyFontSizes` from Font Adjustment sizes and Primitives.
 - The `no-hover` variant for `@media (hover: none)`.
 
 Validate every mode; prefer Light, otherwise the collection default, for config
@@ -229,9 +231,23 @@ preferred-mode fallback. The application supplies CSS variables and mode values;
 v3 emits no CSS, separate mode palettes or copied application config. Verify its
 CSS contract explicitly; v4 output does not guarantee all v3 references exist.
 
+V3 typography emits literal px font sizes and letter spacing, percentage line
+height and unitless string weights. Keys follow the v4 text utility naming
+(`Body 1 -> body1`). It uses the established Master style-family mappings and
+overrides, except Body 1 uses `line-height-sm` (150%) in v3; v4 is unchanged.
+Select Light if present, otherwise the Font Adjustment default (Standard in the
+current source). Validate aliases and required values across every mode, matching
+cross-collection mode names before falling back to the target's selected mode.
+Only the selected mode is emitted; `TYPOGRAPHY_MODE_SCOPE` reports that literal
+entries do not switch dynamically. All modes remain in the source JSON. Missing
+or ambiguous primitives, invalid values and aliases warn and omit incomplete
+selected-mode styles. Name collisions retain deterministic suffixed entries.
+These mappings are compiler policy; Master has no applied typography specimen
+snapshot. School continues to use its own specimen-based typography pipeline.
+
 ### ZB School
 
-| Collection | JSON filename under `zbschool/tokens/` | CSS filename under `dist/zbschool/` |
+| Collection | JSON filename under `dist/zbschools/tokens/` | CSS filename under `dist/zbschools/tailwind4/` |
 | --- | --- | --- |
 | Complete source | `figma-variables.json` | — |
 | Primitives | `primitives.json` | `base.css` |
@@ -302,7 +318,7 @@ Run relevant fixtures for compiler changes; include all affected profiles when
 changing shared conversion behavior:
 
 ```bash
-pnpm exec node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs scripts/zbschool.test.mjs scripts/outputPaths.test.mjs
+pnpm exec node --test scripts/figmatotailwind.test.mjs scripts/figmatotailwind3.test.mjs scripts/zbschools.test.mjs scripts/outputPaths.test.mjs
 ```
 
 Regression coverage must address relevant aliases/cycles, missing targets,

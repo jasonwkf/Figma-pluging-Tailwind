@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { buildSchoolFiles, validateSchoolBundle, schoolAliases, SCHOOL_FILE_KEY } from "./zbschool.mjs";
+import { buildSchoolFiles, validateSchoolBundle, schoolAliases, SCHOOL_FILE_KEY } from "./zbschools.mjs";
 
 function fixture() {
   const collections = ["Primitives", "Colour", "Font Size", "Size", "Breakpoints"].map((name, i) => ({
@@ -158,34 +158,36 @@ test("invalid bundles are rejected before generation", () => {
   }
 });
 
-test("CLI writes CSS directly to the default, environment or positional directory and keeps JSON in zbschool/tokens", async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "zbschool-test-"));
+test("CLI writes CSS directly to the default, environment or positional directory and keeps generated JSON in dist/zbschools/tokens", async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "zbschools-test-"));
   try {
-    const script = new URL("./zbschool.mjs", import.meta.url);
+    const script = new URL("./zbschools.mjs", import.meta.url);
     const pkg = JSON.parse(await fs.readFile(new URL("../package.json", import.meta.url), "utf8"));
     for (const kind of ["default", "environment", "positional"]) {
       const cwd = path.join(root, kind);
-      const input = path.join(cwd, "zbschool/tokens/figma-variables.json");
+      // 使用 variables 下的 School 源文件验证 CLI。
+      const input = path.join(cwd, "variables/figma-zbschools.json");
       await fs.mkdir(path.dirname(input), { recursive: true });
       await fs.writeFile(input, JSON.stringify(complete(fixture())));
       const env = { ...process.env };
-      delete env.ZBSCHOOL_VARIABLES_JSON;
-      delete env.ZBSCHOOL_OUTPUT_DIR;
+      delete env.ZBSCHOOLS_VARIABLES_JSON;
+      delete env.ZBSCHOOLS_OUTPUT_DIR;
       const args = [script.pathname];
-      const output = path.join(cwd, kind === "default" ? "dist/zbschool" : "custom-css");
-      if (kind === "environment") env.ZBSCHOOL_OUTPUT_DIR = output;
+      const output = path.join(cwd, kind === "default" ? "dist/zbschools/tailwind4" : "custom-css");
+      if (kind === "environment") env.ZBSCHOOLS_OUTPUT_DIR = output;
       if (kind === "positional") {
-        env.ZBSCHOOL_OUTPUT_DIR = path.join(cwd, "ignored");
+        env.ZBSCHOOLS_OUTPUT_DIR = path.join(cwd, "ignored");
         args.push(input, output);
       }
       execFileSync(process.execPath, args, { cwd, env, stdio: "pipe" });
-      assert.deepEqual(JSON.parse(await fs.readFile(path.join(cwd, "zbschool/tokens/primitives.json"), "utf8")).variables, []);
-      assert.deepEqual((await fs.readdir(path.join(cwd, "zbschool"))).sort(), ["tokens"]);
-      assert.deepEqual((await fs.readdir(output)).sort(), ["base.css", "breakpoint.css", "colour-token.css", "index.css", "size.css", "typography.css"]);
+      assert.deepEqual(JSON.parse(await fs.readFile(path.join(cwd, "dist/zbschools/tokens/primitives.json"), "utf8")).variables, []);
+      assert.deepEqual((await fs.readdir(path.join(cwd, "variables"))).sort(), ["figma-zbschools.json"]);
+      // 默认与自定义 CSS 目录都只包含样式文件。
+      assert.deepEqual((await fs.readdir(output)).sort(), ["base.css", "breakpoint.css", "colour-token.css", "index.css", "size.css", "typography.css"].sort());
       const index = await fs.readFile(path.join(output, "index.css"), "utf8");
       for (const [, name] of index.matchAll(/@import "\.\/(.+)";/g)) assert.ok((await fs.readFile(path.join(output, name), "utf8")).length);
-      if (kind === "default") assert.equal(path.resolve(cwd, pkg.exports["./zbschool/tailwind4"]), path.join(output, "index.css"));
-      if (kind === "positional") await assert.rejects(fs.access(env.ZBSCHOOL_OUTPUT_DIR), { code: "ENOENT" });
+      if (kind === "default") assert.equal(path.resolve(cwd, pkg.exports["./zbschools/tailwind4"]), path.join(output, "index.css"));
+      if (kind === "positional") await assert.rejects(fs.access(env.ZBSCHOOLS_OUTPUT_DIR), { code: "ENOENT" });
     }
   } finally { await fs.rm(root, { recursive: true, force: true }); }
 });
