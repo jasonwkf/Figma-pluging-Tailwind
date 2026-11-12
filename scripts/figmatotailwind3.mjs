@@ -129,7 +129,6 @@ function buildTypographyFontSizes(bundle, { onWarning = () => {} } = {}) {
     body2: ["line-height-sm", "font-weight-regular", "letter-spacing-none"],
     button2: ["line-height-sm", "font-weight-regular", "letter-spacing-md"],
     button3: ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
-    button4: ["line-height-sm", "font-weight-medium", "letter-spacing-md"],
     header3: ["line-height-sm", "font-weight-regular", "letter-spacing-none"],
     label1: ["line-height-sm", "font-weight-medium", "letter-spacing-md"],
     label3: ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
@@ -139,7 +138,6 @@ function buildTypographyFontSizes(bundle, { onWarning = () => {} } = {}) {
     label9: ["line-height-sm", "font-weight-medium", "letter-spacing-none"],
     subheader1: ["line-height-sm", "font-weight-light", "letter-spacing-none"],
     subheader2: ["line-height-md", "font-weight-medium", "letter-spacing-sm"],
-    subheader3: ["line-height-sm", "font-weight-medium", "letter-spacing-sm"],
   };
   function resolve(variable, modeId, seen = new Set()) {
     const state = `${variable.id}@${modeId}`;
